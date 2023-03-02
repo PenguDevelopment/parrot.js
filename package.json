@@ -1,0 +1,30 @@
+{
+  "name": "parrot.js",
+  "version": "0.0.1",
+  "description": "A discord.js framework",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "none"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PenguDevelopment/parrot.js.git"
+  },
+  "keywords": [
+    "discord.js",
+    "framework",
+    "discord",
+    "parrot.js",
+    "parrot"
+  ],
+  "contributors": ["RatInChat", "proudparrot2"],
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/PenguDevelopment/parrot.js/issues"
+  },
+  "homepage": "https://github.com/PenguDevelopment/parrot.js#readme",
+  "dependencies": {
+    "discord.js": "^14.7.1"
+  }
+}
