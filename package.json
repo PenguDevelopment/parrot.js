@@ -24,6 +24,10 @@
     "url": "https://github.com/PenguDevelopment/parrot.js/issues"
   },
   "homepage": "https://github.com/PenguDevelopment/parrot.js#readme",
+  "files": [
+    "src",
+    "README.md"
+  ],
   "dependencies": {
     "discord.js": "^14.7.1"
   }
