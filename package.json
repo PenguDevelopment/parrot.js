@@ -1,7 +1,7 @@
 {
-  "name": "parrot.js",
+  "name": "@rainchat/parrot.js",
   "version": "0.0.1",
-  "description": "A discord.js framework",
+  "description": "The simple framework for advanced bots",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
