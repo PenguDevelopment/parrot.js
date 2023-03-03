@@ -52,6 +52,39 @@ class BaseClient extends Client {
                             return message.reply(`The channel \`${mArgs[i]}\` does not exist.`)
                         }
                         args[arg.name] = channel;
+                    } else if (arg.type === 1) {
+                        const parsedUser = mArgs[i].replace(/<@|>/g, "");
+                        const user = this.getUser(parsedUser);
+                        if (!user) {
+                            return message.reply(`The user \`${mArgs[i]}\` does not exist.`)
+                        }
+                        args[arg.name] = user;
+                    } else if (arg.type === 2) {
+                        const parsedRole = mArgs[i].replace(/<@&|>/g, "");
+                        const role = this.getRole(parsedRole);
+                        if (!role) {
+                            return message.reply(`The role \`${mArgs[i]}\` does not exist.`)
+                        }
+                        args[arg.name] = role;
+                    } else if (arg.type === 3) {
+                        const parsedNumber = Number(mArgs[i]);
+                        if (isNaN(parsedNumber)) {
+                            return message.reply(`The argument \`${arg.name}\` must be a number.`)
+                        }
+                        args[arg.name] = parsedNumber;
+                    } else if (arg.type === 4) {
+                        args[arg.name] = mArgs[i];
+                    } else if (arg.type === 5) {
+                        args[arg.name] = mArgs[i] === "true" ? true : false;
+                    } else if (arg.type === 6) {
+                        const parsedEmoji = mArgs[i].replace(/<:|>/g, "");
+                        const emoji = this.getEmoji(parsedEmoji);
+                        if (!emoji) {
+                            return message.reply(`The emoji \`${mArgs[i]}\` does not exist.`)
+                        }
+                        args[arg.name] = emoji;
+                    } else {
+                        return message.reply(`The argument \`${arg.name}\` has an invalid type.`)
                     }
                 }
 
@@ -65,6 +98,15 @@ class BaseClient extends Client {
     }
     getChannel(id) {
         return this.channels.cache.get(id);
+    }
+    getUser(id) {
+        return this.users.cache.get(id);
+    }
+    getRole(id) {
+        return this.roles.cache.get(id);
+    }
+    getEmoji(id) {
+        return this.emojis.cache.get(id);
     }
 }
 

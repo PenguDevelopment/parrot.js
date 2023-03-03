@@ -1,5 +1,5 @@
 {
-  "name": "@rainchat/parrot.js",
+  "name": "@ratinchat/parrot.js",
   "version": "0.0.1",
   "description": "The simple framework for advanced bots",
   "main": "src/index.js",
