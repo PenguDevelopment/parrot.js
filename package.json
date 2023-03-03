@@ -18,7 +18,7 @@
     "parrot.js",
     "parrot"
   ],
-  "contributors": ["RatInChat", "proudparrot2"],
+  "contributors": ["ratinchat", "proudparrot2"],
   "license": "AGPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/PenguDevelopment/parrot.js/issues"
