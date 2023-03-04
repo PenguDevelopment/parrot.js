@@ -14,6 +14,7 @@ class BaseClient extends Client {
         } else { 
             console.log(`Successfully started bot!`)
             this.on('messageCreate', this.onMessage.bind(this));
+            this.on('interactionCreate', this.onInteractionCreate.bind(this));
             this.login(this.token)
         }
     }
@@ -45,38 +46,38 @@ class BaseClient extends Client {
                 const args = {};
                 for (let i = 0; i < mArgs.length; i++) {
                     const arg = cArgs[i];
-                    if (arg.type === 0) {
+                    if (arg.type === 7) {
                         const parsedChannel = mArgs[i].replace(/<#|>/g, "");
                         const channel = this.getChannel(parsedChannel);
                         if (!channel) {
                             return message.reply(`The channel \`${mArgs[i]}\` does not exist.`)
                         }
                         args[arg.name] = channel;
-                    } else if (arg.type === 1) {
+                    } else if (arg.type === 6) {
                         const parsedUser = mArgs[i].replace(/<@|>/g, "");
                         const user = this.getUser(parsedUser);
                         if (!user) {
                             return message.reply(`The user \`${mArgs[i]}\` does not exist.`)
                         }
                         args[arg.name] = user;
-                    } else if (arg.type === 2) {
+                    } else if (arg.type === 8) {
                         const parsedRole = mArgs[i].replace(/<@&|>/g, "");
                         const role = this.getRole(parsedRole);
                         if (!role) {
                             return message.reply(`The role \`${mArgs[i]}\` does not exist.`)
                         }
                         args[arg.name] = role;
-                    } else if (arg.type === 3) {
+                    } else if (arg.type === 10) {
                         const parsedNumber = Number(mArgs[i]);
                         if (isNaN(parsedNumber)) {
                             return message.reply(`The argument \`${arg.name}\` must be a number.`)
                         }
                         args[arg.name] = parsedNumber;
-                    } else if (arg.type === 4) {
+                    } else if (arg.type === 3) {
                         args[arg.name] = mArgs[i];
                     } else if (arg.type === 5) {
                         args[arg.name] = mArgs[i] === "true" ? true : false;
-                    } else if (arg.type === 6) {
+                    } else if (arg.type === 12) {
                         const parsedEmoji = mArgs[i].replace(/<:|>/g, "");
                         const emoji = this.getEmoji(parsedEmoji);
                         if (!emoji) {
@@ -107,6 +108,74 @@ class BaseClient extends Client {
     }
     getEmoji(id) {
         return this.emojis.cache.get(id);
+    }
+    onInteractionCreate(interaction) {
+        for (const slash of this.slashCommands) {
+            if (slash.name === interaction.commandName) {
+                if (slash.permissions) {
+                    const member = interaction.member;
+                    if (!member) {
+                        return interaction.reply(`You must be in a guild to use this command.`)
+                    }
+                    const permissions = member.permissions;
+                    if (!permissions) {
+                        return interaction.reply(`You must have the \`${slash.permissions}\` permission to use this command.`)
+                    }
+                    if (!permissions.has(slash.permissions)) {
+                        return interaction.reply(`You must have the \`${slash.permissions}\` permission to use this command.`)
+                    }
+                }
+                const cArgs = slash.args;
+                if (!cArgs) {
+                    return slash.execute(interaction);
+                }
+
+                const args = {};
+                for (const arg of cArgs) {
+                    if (arg.type === 7) {
+                        const channel = this.getChannel(interaction.options.getChannel(arg.name).id);
+                        if (!channel) {
+                            return interaction.reply(`The channel \`${interaction.options.getChannel(arg.name).name}\` does not exist.`)
+                        }
+                        args[arg.name] = channel;
+                    } else if (arg.type === 6) {
+                        const user = this.getUser(interaction.options.getUser(arg.name).id);
+                        if (!user) {
+                            return interaction.reply(`The user \`${interaction.options.getUser(arg.name).username}\` does not exist.`)
+                        }
+                        args[arg.name] = user;
+                    } else if (arg.type === 8) {
+                        const role = this.getRole(interaction.options.getRole(arg.name).id);
+                        if (!role) {
+                            return interaction.reply(`The role \`${interaction.options.getRole(arg.name).name}\` does not exist.`)
+                        }
+                        args[arg.name] = role;
+                    } else if (arg.type === 10) {
+                        const number = interaction.options.getNumber(arg.name);
+                        if (isNaN(number)) {
+                            return interaction.reply(`The argument \`${arg.name}\` must be a number.`)
+                        }
+                        args[arg.name] = number;
+                    } else if (arg.type === 3) {
+                        args[arg.name] = interaction.options.getString(arg.name);
+                    } else if (arg.type === 5) {
+                        args[arg.name] = interaction.options.getBoolean(arg.name);
+                    } else if (arg.type === 12) {
+                        const emoji = this.getEmoji(interaction.options.getEmoji(arg.name).id);
+                        if (!emoji) {
+                            return interaction.reply(`The emoji \`${interaction.options.getEmoji(arg.name).name}\` does not exist.`)
+                        }
+                        args[arg.name] = emoji;
+                    } else {
+                        return interaction.reply(`The argument \`${arg.name}\` has an invalid type.`)
+                    }
+                }
+                return slash.execute(interaction, args);
+            }
+        }
+    }
+    onReady(callback) {
+        this.on('ready', callback)
     }
 }
 
