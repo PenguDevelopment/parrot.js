@@ -11,8 +11,6 @@ async function checkUpdate() {
     if (latestVersion !== pkg.version) {
       console.log(`There is a new version of ${pkg.name} available: ${latestVersion}.`);
       console.log(`To update, run: npm install ${pkg.name}@${latestVersion}`);
-    } else {
-      console.log(`${pkg.name} is up-to-date.`);
     }
   });
 }
