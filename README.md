@@ -1,6 +1,5 @@
 
-# Parrot.js
-### The simple framework for advanced bots
+![parrot.js](https://socialify.git.ci/PenguDevelopment/parrot.js/image?description=1&descriptionEditable=The%20simple%20framework%20for%20advanced%20bots.&forks=1&issues=1&language=1&logo=https%3A%2F%2FMagiCloud.ParrotDev.repl.co%2Fuploads%2Fparrot.png&name=1&pattern=Solid&stargazers=1&theme=Dark)
 #### Status: (In Development)
 ---
 ## Features
