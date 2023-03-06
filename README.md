@@ -1,6 +1,5 @@
 
-![parrot.js](https://socialify.git.ci/PenguDevelopment/parrot.js/image?description=1&descriptionEditable=The%20simple%20framework%20for%20advanced%20bots.&forks=1&issues=1&language=1&logo=https%3A%2F%2FMagiCloud.ParrotDev.repl.co%2Fuploads%2Fparrot.png&name=1&pattern=Solid&stargazers=1&theme=Dark)
-#### Status: (In Development)
+![parrot.js](https://socialify.git.ci/PenguDevelopment/parrot.js/image?description=1&font=Source%20Code%20Pro&language=1&logo=https%3A%2F%2Fi.ibb.co%2FhcwKcYD%2Fparrot.png&name=1&owner=1&pattern=Solid&theme=Dark)
 ---
 ## Features
 
@@ -78,10 +77,7 @@ commands.newCommand({
     name: 'ping',
     description: 'Get the ping of the bot',
     prefix: '%',
-    execute: async (message, { channel }) => {
-        if (channel) {
-            channel.send("The ping is " + bot.getPing())
-        }
+    execute: async (message) => {
         message.send("The ping is " + bot.getPing())
     }
 });
