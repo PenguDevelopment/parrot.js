@@ -194,18 +194,18 @@ Make sure to change token to your token!
 ## Current Options
 Here are the current options to the parrot.Options:
 ```js
-        USER,
-        MENTIONABLE,
-        CHANNEL,
-        ROLE,
-        STRING,
-        INTEGER,
-        BOOLEAN,
-        NUMBER,
-        ATTACHMENT,
-        SUB_COMMAND,
-        SUB_COMMAND_GROUP,
-        EMOJI
+USER,
+MENTIONABLE,
+CHANNEL,
+ROLE,
+STRING,
+INTEGER,
+BOOLEAN,
+NUMBER,
+ATTACHMENT,
+SUB_COMMAND,
+SUB_COMMAND_GROUP,
+EMOJI
 ```
 #### Note: Some options may or may not work!
 That is all for this guide. More will be added soon, so stay viligant!
