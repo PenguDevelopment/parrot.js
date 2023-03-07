@@ -53,7 +53,6 @@ class Bot extends BaseClient {
                             default_member_permissions: command.default_member_permissions,
                             dm_permission: command.dm_permission,
                         }
-                        console.log(data);
                         commands.push(data);
                     }
                     try {
