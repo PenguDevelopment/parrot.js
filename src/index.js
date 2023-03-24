@@ -9,7 +9,7 @@ import { ButtonBuilder } from 'discord.js';
 import { StringSelectMenuBuilder  } from 'discord.js';
 import { ImportSlashCommands } from './functions/importSlashCommands.js';
 import { PermissionsBitField } from 'discord.js';
-import { Modal } from './classes/modal.js';
+import { Modal } from './classes/Modal.js';
 
 checkUpdate();
 
