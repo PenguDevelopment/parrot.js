@@ -2,7 +2,7 @@
 ![parrot.js](https://socialify.git.ci/PenguDevelopment/parrot.js/image?description=1&font=Source%20Code%20Pro&language=1&logo=https%3A%2F%2Fi.ibb.co%2FhcwKcYD%2Fparrot.png&name=1&owner=1&pattern=Solid&theme=Dark)
 ---
 ## v0.0.4
-This update does not include a updated read me, if you want to see the new features look at the classes.
+This update does not include a updated read me, if you want to see the new features look at the classes. (should come out in a week or so.)
 v0.0.5 will include more and have a updated read me.
 ## Features
 
