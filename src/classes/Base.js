@@ -29,6 +29,26 @@ class BaseClient extends Client {
                     message.send = async (content) => {
                         await message.channel.send(content);
                     }
+                    message.ButtonCollector = async ({ ...args }) => {
+                        console.log(args);
+                        if (args.componentType) {
+                            const collector = await message.channel.createMessageComponentCollector({ ...args });
+                            return collector;
+                        } else {
+                            const collector = await message.channel.createMessageComponentCollector({ componentType: 2, ...args });
+                            return collector;
+                        }
+                    }
+                    message.SelectMenuCollector = async ({ ...args }) => {
+                        if (args.componentType) {
+                            const collector = await message.channel.createMessageComponentCollector({ ...args });
+                            return collector;
+                        } else {
+                            const collector = await message.channel.createMessageComponentCollector({ componentType: 3, ...args });
+                            return collector;
+                        }
+                    }
+
                     return command.execute(message);
                 }
 
@@ -92,6 +112,16 @@ class BaseClient extends Client {
                 }
 
                 message.send = async (content) => {
+                    message.ButtonCollector = async ({ ...args }) => {
+                        const filter = args.filter ? args.filter : (i) => i.isButton();
+                        const collector = message.channel.createMessageComponentCollector({ filter, ...args });
+                        return collector;
+                    }
+                    message.SelectMenuCollector = async ({ ...args }) => {
+                        const filter = args.filter ? args.filter : (i) => i.isSelectMenu(); 
+                        const collector = message.channel.createMessageComponentCollector({ filter, ...args });
+                        return collector;
+                    }
                     await message.channel.send(content);
                 }
                 
@@ -131,6 +161,36 @@ class BaseClient extends Client {
                 if (!cArgs) {
                     interaction.replyEphemeral = async (...args) => {
                         await interaction.reply(...args);
+                    }
+                    interaction.ButtonCollector = async ({ ...args }) => {
+                        if (args.componentType) {
+                            const collector = await interaction.channel.createMessageComponentCollector({ ...args });
+                            return collector;
+                        } else {
+                            const collector = await interaction.channel.createMessageComponentCollector({ componentType: 2, ...args });
+                            return collector;
+                        }
+                    }
+                    interaction.SelectMenuCollector = async ({ ...args }) => {
+                        if (args.componentType) {
+                            const collector = await interaction.channel.createMessageComponentCollector({ ...args });
+                            return collector;
+                        } else {
+                            const collector = await interaction.channel.createMessageComponentCollector({ componentType: 3, ...args });
+                            return collector;
+                        }
+                    }
+
+                    interaction.collectModalInput = async ({ ...args }) => {
+                        const collector = await interaction.awaitModalSubmit({ ...args }).catch((error) => {
+                            console.log(error);
+                        });
+                        collector.fields = collector.fields.fields;
+                        return collector;
+                    }
+
+                    interaction.display = async (modal) => {
+                        await interaction.showModal(modal);
                     }
                     return slash.execute(interaction);
                 }
@@ -195,16 +255,32 @@ class BaseClient extends Client {
                         }
                     }
                     await interaction.reply(...args);
-                };// what you say?
-                // 
-                // interaction.reply = async (args) => {
-                //     if (typeof args == discord.Embed) 
-                   
-                //     // maybe if you loop
-                //     interaction.reply(embed, row)
-                    
-                // }
-                // idk if this workaround will work lol.
+                };
+                interaction.ButtonCollector = async ({ ...args }) => {
+                    if (args.componentType) {
+                        const collector = await interaction.channel.createMessageComponentCollector({ ...args });
+                        return collector;
+                    } else {
+                        const collector = await interaction.channel.createMessageComponentCollector({ componentType: 2, ...args });
+                        return collector;
+                    }
+                }
+                interaction.SelectMenuCollector = async ({ ...args }) => {
+                    if (args.componentType) {
+                        const collector = await interaction.channel.createMessageComponentCollector({ ...args });
+                        return collector;
+                    } else {
+                        const collector = await interaction.channel.createMessageComponentCollector({ componentType: 3, ...args });
+                        return collector;
+                    }
+                }
+                interaction.collectModalInput = async ({ ...args }) => {
+                    const collector = await interaction.awaitModalSubmit({ ...args }).catch((error) => {
+                        console.log(error);
+                    });
+                    collector.fields = collector.fields.fields;
+                    return collector;
+                }
                 return slash.execute(interaction, args);
             }
         }

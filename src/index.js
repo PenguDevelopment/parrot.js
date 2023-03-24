@@ -9,6 +9,8 @@ import { ButtonBuilder } from 'discord.js';
 import { StringSelectMenuBuilder  } from 'discord.js';
 import { ImportSlashCommands } from './functions/importSlashCommands.js';
 import { PermissionsBitField } from 'discord.js';
+import { Modal } from './classes/modal.js';
+
 checkUpdate();
 
 const parrot = {
@@ -27,6 +29,13 @@ const parrot = {
         SUB_COMMAND_GROUP: 2,
         EMOJI: 12,
     },
+    ButtonStyle: {
+        Primary: 1,
+        Secondary: 2,
+        Success: 3,
+        Danger: 4,
+        Link: 5,
+    },
     ImportCommands,
     ImportSlashCommands,
     TextCommand,
@@ -36,5 +45,10 @@ const parrot = {
     SelectMenu: StringSelectMenuBuilder,
     SlashCommand,
     Permissions: PermissionsBitField.Flags,
+    Modal,
+    ModalStyle: {
+        Short: 1,
+        Long: 2,
+    },
 };
 export default parrot;
