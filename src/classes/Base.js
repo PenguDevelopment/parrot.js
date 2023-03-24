@@ -19,6 +19,7 @@ class BaseClient extends Client {
             this.login(this.token)
         }
     }
+    
     async onMessage(message) {
         for (const command of this.commands) {
             const prefix = command.prefix ? command.prefix : this.prefix;
@@ -54,60 +55,68 @@ class BaseClient extends Client {
 
                 if (mArgs.length !== cArgs.length) {
                     for (const arg of cArgs) {
-                        if (arg.required) {
+                        if (arg.required && !args[arg.name]) {
                             return message.reply(`Argument \`${arg.name}\` is required.`)
                         }
                     }
                 }
-
+            
                 if (mArgs.length > cArgs.length) {
                     return message.reply(`Too many arguments were provided.`)
                 }
 
                 const args = {};
-                for (let i = 0; i < mArgs.length; i++) {
+                for (let i = 0; i < cArgs.length; i++) {
                     const arg = cArgs[i];
-                    if (arg.type === 7) {
-                        const parsedChannel = mArgs[i].replace(/<#|>/g, "");
-                        const channel = this.getChannel(parsedChannel);
-                        if (!channel) {
-                            return message.reply(`Channel argument \`${mArgs[i]}\` does not exist.`)
+                    const mArg = mArgs[i];
+                
+                    if (mArg) {
+                        if (arg.type === 7) {
+                            const parsedChannel = mArg.replace(/<#|>/g, "");
+                            const channel = this.getChannel(parsedChannel);
+                            if (!channel) {
+                                return message.reply(`Channel argument \`${mArg}\` does not exist.`)
+                            }
+                            args[arg.name] = channel;
+                        } else if (arg.type === 6) {
+                            const parsedUser = mArg.replace(/<@|>/g, "");
+                            const user = this.getUser(parsedUser);
+                            if (!user) {
+                                return message.reply(`User argument \`${mArg}\` does not exist.`)
+                            }
+                            args[arg.name] = user;
+                        } else if (arg.type === 8) {
+                            const parsedRole = mArg.replace(/<@&|>/g, "");
+                            const role = this.getRole(parsedRole);
+                            if (!role) {
+                                return message.reply(`Role argument \`${mArg}\` does not exist.`)
+                            }
+                            args[arg.name] = role;
+                        } else if (arg.type === 10) {
+                            if (isNaN(+mArg) || !Number.isInteger(+mArg)) {
+                                return message.reply(`Number argument \`${arg.name}\` is either missing or of an invalid type.`);
+                            }
+                            args[arg.name] = mArg;
+                        } else if (arg.type === 3) {
+                            args[arg.name] = mArg;
+                        } else if (arg.type === 5) {
+                            args[arg.name] = mArg === "true" ? true : false;
+                        } else if (arg.type === 12) {
+                            const parsedEmoji = mArg.replace(/<:|>/g, "");
+                            const emoji = this.getEmoji(parsedEmoji);
+                            if (!emoji) {
+                                return message.reply(`Emoji argument \`${mArg}\` does not exist.`)
+                            }
+                            args[arg.name] = emoji;
+                        } else {
+                            return message.reply(`Argument \`${arg.name}\` is of an invalid type.`)
                         }
-                        args[arg.name] = channel;
-                    } else if (arg.type === 6) {
-                        const parsedUser = mArgs[i].replace(/<@|>/g, "");
-                        const user = this.getUser(parsedUser);
-                        if (!user) {
-                            return message.reply(`User argument \`${mArgs[i]}\` does not exist.`)
-                        }
-                        args[arg.name] = user;
-                    } else if (arg.type === 8) {
-                        const parsedRole = mArgs[i].replace(/<@&|>/g, "");
-                        const role = this.getRole(parsedRole);
-                        if (!role) {
-                            return message.reply(`Role argument \`${mArgs[i]}\` does not exist.`)
-                        }
-                        args[arg.name] = role;
-                    } else if (arg.type === 10) {
-                        if (isNaN(+mArgs[i]) || !Number.isInteger(+mArgs[i])) {
-                            console.log(mArgs[i])
-                            console.log(+mArgs[i])
-                            return message.reply(`Number argument \`${arg.name}\` is either missing or of an invalid type.`);
-                        }
-                        args[arg.name] = mArgs[i];
-                    } else if (arg.type === 3) {
-                        args[arg.name] = mArgs[i];
-                    } else if (arg.type === 5) {
-                        args[arg.name] = mArgs[i] === "true" ? true : false;
-                    } else if (arg.type === 12) {
-                        const parsedEmoji = mArgs[i].replace(/<:|>/g, "");
-                        const emoji = this.getEmoji(parsedEmoji);
-                        if (!emoji) {
-                            return message.reply(`Emoji argument \`${mArgs[i]}\` does not exist.`)
-                        }
-                        args[arg.name] = emoji;
                     } else {
-                        return message.reply(`Argument \`${arg.name}\` is of an invalid type.`)
+                        if (arg.required) {
+                            return message.reply(`Argument \`${arg.name}\` is required.`)
+                        } else {
+                            args[arg.name] = null;
+                        }
                     }
                 }
 
@@ -197,50 +206,58 @@ class BaseClient extends Client {
 
                 const args = {};
                 for (const arg of cArgs) {
+                    const option = interaction.options[arg.name];
+                    if (!option) {
+                        if (arg.required) {
+                            return interaction.reply({ content: `Required argument \`${arg.name}\` is missing.`, ephemeral: true });
+                        } else {
+                            args[arg.name] = null;
+                            continue;
+                        }
+                    }
+                
                     if (arg.type === 7) {
-                        const channel = this.getChannel(interaction.options.getChannel(arg.name).id);
+                        const channel = this.getChannel(option.channelId);
                         if (!channel) {
-                            return interaction.reply({ content: `Channel argument \`${interaction.options.getChannel(arg.name).name}\` does not exist.`, ephemeral: true })
+                            return interaction.reply({ content: `Channel argument \`${option.name}\` does not exist.`, ephemeral: true });
                         }
                         args[arg.name] = channel;
                     } else if (arg.type === 6) {
-                        const user = this.getUser(interaction.options.getUser(arg.name).id);
+                        const user = this.getUser(option.userId);
                         if (!user) {
-                            return interaction.reply({ content: `User argument \`${interaction.options.getUser(arg.name).username}\` does not exist.`, ephemeral: true })
+                            return interaction.reply({ content: `User argument \`${option.name}\` does not exist.`, ephemeral: true });
                         }
                         args[arg.name] = user;
                     } else if (arg.type === 8) {
-                        const role = this.getRole(interaction.options.getRole(arg.name).id);
-                        if (!role) { // parrot you know there is a session chat?
-                            return interaction.reply({ content: `Role argument \`${interaction.options.getRole(arg.name).name}\` does not exist.`, ephemeral: true })
+                        const role = this.getRole(option.roleId);
+                        if (!role) {
+                            return interaction.reply({ content: `Role argument \`${option.name}\` does not exist.`, ephemeral: true });
                         }
                         args[arg.name] = role;
                     } else if (arg.type === 10) {
-                        const number = interaction.options.getNumber(arg.name);
+                        const number = option.value;
                         if (isNaN(number)) {
-                            return interaction.reply({ content: `Number argument \`${arg.name}\` must be a number.`, ephemeral: true })
+                            return interaction.reply({ content: `Number argument \`${arg.name}\` must be a number.`, ephemeral: true });
                         }
                         args[arg.name] = number;
                     } else if (arg.type === 3) {
-                        args[arg.name] = interaction.options.getString(arg.name);
+                        args[arg.name] = option.value;
                     } else if (arg.type === 5) {
-                        args[arg.name] = interaction.options.getBoolean(arg.name);
+                        args[arg.name] = option.value;
                     } else if (arg.type === 12) {
-                        const emoji = this.getEmoji(interaction.options.getEmoji(arg.name).id);
+                        const emoji = this.getEmoji(option.emojiId);
                         if (!emoji) {
-                            return interaction.reply({ content: `Emoji \`${interaction.options.getEmoji(arg.name).name}\` does not exist.`, ephemeral: true })
+                            return interaction.reply({ content: `Emoji \`${option.name}\` does not exist.`, ephemeral: true });
                         }
                         args[arg.name] = emoji;
                     } else {
-                        return interaction.reply({ content: `Argument \`${arg.name}\` is of an invalid type.`, ephemeral: true })
+                        return interaction.reply({ content: `Argument \`${arg.name}\` is of an invalid type.`, ephemeral: true });
                     }
-                }
-                // you can make it like this
-                // pretty sure this will account for args and everything.
+                }                
                 interaction.replyEphemeral = async (...args) => {
-                    const replyOptions = args[args.length - 1]; // extract reply options, if any
+                    const replyOptions = args[args.length - 1];
                     if (replyOptions && typeof replyOptions === 'object') {
-                      replyOptions.ephemeral = true; // set ephemeral to true
+                      replyOptions.ephemeral = true;
                     } else {
                         switch (typeof args[0]) {
                             case "string":

@@ -7,6 +7,47 @@ class Bot extends BaseClient {
         this.commands = [];
         this.slashCommands = [];
     }
+    setStatus(options) {
+        let type = options.activities[0].type;
+       switch (type) {
+              case "Playing":
+                    options.type = 0;
+                    break;
+                case "Streaming":
+                    options.type = 1;
+                    break;
+                case "Listening":
+                    options.type = 2;
+                    break;
+                case "Watching":
+                    options.type = 3;
+                    break;
+                case "Custom":
+                    options.type = 4;
+                    break;
+                case "Competing":
+                    options.type = 5;
+                    break;
+                default:
+                    options.type = 0;
+                    break;
+            }
+        this.user.setPresence({
+            activities: [{
+                name: `${options.activities[0].name}`,
+                type: options.type,
+                url: options.url
+            }],
+            status: `${options.status}`
+        });
+    }
+    initEvents() {
+        return {
+            newEvent: (event) => {
+                this.on(event.name, event.execute);
+            }
+        }
+    }
 
     initCommands(options) {
         this.prefix = options.prefix;
