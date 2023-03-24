@@ -1,4 +1,4 @@
-import { Bot } from './classes/bot.js';
+import { Bot } from './classes/Bot.js';
 import { ImportCommands } from './functions/importCommands.js';
 import { TextCommand } from './classes/textCommand.js';
 import { SlashCommand } from './classes/slashCommand.js';
