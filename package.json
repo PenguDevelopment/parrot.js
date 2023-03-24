@@ -1,6 +1,6 @@
 {
   "name": "@ratinchat/parrot.js",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "The simple framework for advanced bots",
   "main": "src/index.js",
   "type": "module",
@@ -18,7 +18,10 @@
     "parrot.js",
     "parrot"
   ],
-  "contributors": ["ratinchat", "proudparrot2"],
+  "contributors": [
+    "ratinchat",
+    "proudparrot2"
+  ],
   "license": "AGPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/PenguDevelopment/parrot.js/issues"
