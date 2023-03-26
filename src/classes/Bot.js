@@ -8,7 +8,9 @@ class Bot extends BaseClient {
         this.slashCommands = [];
     }
     setStatus(options) {
-        let type = options.activities[0].type;
+        let status = [];
+        for (let i = 0; i < options.activities.length; i++) {
+            let type = options.activities[i].type;
        switch (type) {
               case "Playing":
                     options.type = 0;
@@ -32,13 +34,16 @@ class Bot extends BaseClient {
                     options.type = 0;
                     break;
             }
-        this.user.setPresence({
-            activities: [{
-                name: `${options.activities[0].name}`,
+            let activity = {
+                name: options.activities[i].name,
                 type: options.type,
-                url: options.url
-            }],
-            status: `${options.status}`
+                url: options.activities[i].url
+            }
+            status.push(activity);
+        }
+        this.user.setPresence({
+            activities: status,
+            status: options.status
         });
     }
     initEvents() {
