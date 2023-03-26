@@ -91,6 +91,8 @@ const command = new parrot.TextCommand({
         message.send("The ping is " + bot.getPing())
     }
 })
+
+export { command }
 ```
 
 ---

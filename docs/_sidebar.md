@@ -14,3 +14,4 @@
   - [Special Functions](specialfunctions.md)
 
 - [Changelog](changelog.md)
+- [Known Issues](knownissues.md)

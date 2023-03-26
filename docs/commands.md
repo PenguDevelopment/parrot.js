@@ -90,6 +90,8 @@ const command = new parrot.TextCommand({
         await message.send(`Revived ${user.username}`);
     }
 });
+
+export { command }
 ```
 
 ---

@@ -7,6 +7,7 @@ class SlashCommand {
         this.description_localizations = options.description_localizations;
         this.args = options.args;
         this.execute = options.execute;
+        this.subcommands = options.subcommands;
     }
 }
 
