@@ -30,26 +30,38 @@ commands.newCommand({
 ## Command Arguments
 You can add arguments to your commands like this:
 ```js
-commands.newCommand({
-    name: 'repeat',
-    description: 'Repeat a message',
+contextCommands.newCommand({
+    name: 'ping',
+    description: 'Ping A User',
+    permissions: [parrot.Permissions.UseExternalStickers],
     args: [
         {
-            name: 'message',
-            description: 'The message to repeat',
-            required: true,
-            type: 'string'
+            name: 'user',
+            description: 'User to ping',
+            length: 1,
+            type: parrot.Options.User
+        },
+        {
+            name: 'reason',
+            description: 'Reason for pinging',
+            length: 'infinity',
+            type: parrot.Options.String
         }
     ],
-    execute: async (message, { message }) => {
-        await message.send(message);
+    execute: async (message, { user, reason }) => {
+        if (!user) { return message.send("No user provided") } else {
+            await message.send(`Helo ${user}! ${reason}`);
+        }
     }
 });
 ```
+
+!> the infinity option absolutely **must** be a string and at the end of your arguments!
+
 The `args` property is an array of objects. Each object is an argument.
 All arguments are returned in a variable called `args` in the execute function. Though you can use `(message, { message })` to get the message argument, instead of `(message, args.message)` or `(message, args)`.
 
-!> The `args` returned by the user are automatically checked for the type you specified. If the user doesn't provide the correct type, the command will return an error.
+?> The `args` returned by the user are automatically checked for the type you specified. If the user doesn't provide the correct type, the command will return an error.
 
 ---
 

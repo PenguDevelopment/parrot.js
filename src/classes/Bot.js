@@ -88,7 +88,34 @@ class Bot extends BaseClient {
                                 }
                                 options.push(option);
                             }
+                        } else if (command.subcommands) {
+                            for (const subcommand of command.subcommands) {
+                                let subcommandOptions = [];
+                                if (subcommand.args) {
+                                    for (const arg of subcommand.args) {
+                                        let option = {
+                                            name: arg.name,
+                                            name_localizations: arg.name_localizations,
+                                            description: arg.description,
+                                            description_localizations: arg.description_localizations,
+                                            required: arg.required,
+                                            type: arg.type
+                                        }
+                                        subcommandOptions.push(option);
+                                    }
+                                }
+                                let option = {
+                                    name: subcommand.name,
+                                    name_localizations: subcommand.name_localizations,
+                                    description: subcommand.description,
+                                    description_localizations: subcommand.description_localizations,
+                                    type: 1,
+                                    options: subcommandOptions
+                                }
+                                options.push(option);
+                            }
                         }
+                        
                         let data = {
                             options: options,
                             name: command.name,

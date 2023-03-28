@@ -11,6 +11,7 @@
   - [Modals](modals.md)
   - [Events](events.md)
   - [Embeds](embeds.md)
+  - [Subcommands](subcommands.md)
   - [Special Functions](specialfunctions.md)
 
 - [Changelog](changelog.md)

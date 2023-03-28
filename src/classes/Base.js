@@ -24,14 +24,29 @@ class BaseClient extends Client {
         for (const command of this.commands) {
             const prefix = command.prefix ? command.prefix : this.prefix;
             if (message.content.startsWith(prefix + command.name)) { 
-                const mArgs = message.content.slice(prefix.length + command.name.length).trim().split(/ +/g);
                 const cArgs = command.args;
+
+                let mArgs = {};
+                let messageContent = message.content.slice(prefix.length + command.name.length).trim();
+                if (cArgs) {
+                    for (const arg of cArgs) {
+                        if (arg.length === 'infinity') {
+                            mArgs[arg.name] = messageContent;
+                            messageContent = "";
+                        } else {
+                            // make sure to account for extra spaces
+                            const [firstArg, ...rest] = messageContent.split(" ");
+                            mArgs[arg.name] = firstArg;
+                            messageContent = rest.join(" ");
+                        }
+                    }
+                }
+
                 if (!cArgs)  {
                     message.send = async (content) => {
                         await message.channel.send(content);
                     }
                     message.ButtonCollector = async ({ ...args }) => {
-                        console.log(args);
                         if (args.componentType) {
                             const collector = await message.channel.createMessageComponentCollector({ ...args });
                             return collector;
@@ -53,23 +68,16 @@ class BaseClient extends Client {
                     return command.execute(message);
                 }
 
-                if (mArgs.length !== cArgs.length) {
-                    for (const arg of cArgs) {
-                        if (arg.required && !args[arg.name]) {
-                            return message.reply(`Argument \`${arg.name}\` is required.`)
-                        }
-                    }
-                }
-            
-                if (mArgs.length > cArgs.length) {
-                    return message.reply(`Too many arguments were provided.`)
-                }
 
                 const args = {};
                 for (let i = 0; i < cArgs.length; i++) {
                     const arg = cArgs[i];
-                    const mArg = mArgs[i];
-                
+                    const mArg = mArgs[arg.name];
+                    for (const arg of cArgs) {
+                        if (!mArgs[arg.name]) {
+                            return message.reply(`Argument \`${arg.name}\` is required.`)
+                        }
+                    }
                     if (mArg) {
                         if (arg.type === 7) {
                             const parsedChannel = mArg.replace(/<#|>/g, "");
@@ -79,8 +87,8 @@ class BaseClient extends Client {
                             }
                             args[arg.name] = channel;
                         } else if (arg.type === 6) {
-                            const parsedUser = mArg.replace(/<@|>/g, "");
-                            const user = this.getUser(parsedUser);
+                            const id = mArg.replace(/<@!?|>/g, "");
+                            const user = this.getUser(id);
                             if (!user) {
                                 return message.reply(`User argument \`${mArg}\` does not exist.`)
                             }
@@ -111,27 +119,21 @@ class BaseClient extends Client {
                         } else {
                             return message.reply(`Argument \`${arg.name}\` is of an invalid type.`)
                         }
-                    } else {
-                        if (arg.required) {
-                            return message.reply(`Argument \`${arg.name}\` is required.`)
-                        } else {
-                            args[arg.name] = null;
-                        }
                     }
                 }
 
                 message.send = async (content) => {
-                    message.ButtonCollector = async ({ ...args }) => {
-                        const filter = args.filter ? args.filter : (i) => i.isButton();
-                        const collector = message.channel.createMessageComponentCollector({ filter, ...args });
-                        return collector;
-                    }
-                    message.SelectMenuCollector = async ({ ...args }) => {
-                        const filter = args.filter ? args.filter : (i) => i.isSelectMenu(); 
-                        const collector = message.channel.createMessageComponentCollector({ filter, ...args });
-                        return collector;
-                    }
                     await message.channel.send(content);
+                }
+                message.ButtonCollector = async ({ ...args }) => {
+                    const filter = args.filter ? args.filter : (i) => i.isButton();
+                    const collector = message.channel.createMessageComponentCollector({ filter, ...args });
+                    return collector;
+                }
+                message.SelectMenuCollector = async ({ ...args }) => {
+                    const filter = args.filter ? args.filter : (i) => i.isSelectMenu(); 
+                    const collector = message.channel.createMessageComponentCollector({ filter, ...args });
+                    return collector;
                 }
                 
                 await command.execute(message, args);
@@ -167,6 +169,7 @@ class BaseClient extends Client {
                     }
                 }
                 const cArgs = slash.args;
+
                 if (!cArgs) {
                     interaction.replyEphemeral = async (...args) => {
                         await interaction.reply(...args);
@@ -201,58 +204,40 @@ class BaseClient extends Client {
                     interaction.display = async (modal) => {
                         await interaction.showModal(modal);
                     }
+
+                    interaction.getSubcommand = async (name) => {
+                        const subcommand = await interaction.options.getSubcommand(name);
+                        return subcommand;
+                    }
+
                     return slash.execute(interaction);
                 }
 
                 const args = {};
                 for (const arg of cArgs) {
-                    const option = interaction.options[arg.name];
-                    if (!option) {
-                        if (arg.required) {
-                            return interaction.reply({ content: `Required argument \`${arg.name}\` is missing.`, ephemeral: true });
-                        } else {
-                            args[arg.name] = null;
-                            continue;
-                        }
-                    }
-                
+                    const option = await interaction.options.get(arg.name);
+
+                    if (option) {
                     if (arg.type === 7) {
-                        const channel = this.getChannel(option.channelId);
-                        if (!channel) {
-                            return interaction.reply({ content: `Channel argument \`${option.name}\` does not exist.`, ephemeral: true });
-                        }
-                        args[arg.name] = channel;
+                        args[arg.name] = option.channel;
                     } else if (arg.type === 6) {
-                        const user = this.getUser(option.userId);
-                        if (!user) {
-                            return interaction.reply({ content: `User argument \`${option.name}\` does not exist.`, ephemeral: true });
-                        }
-                        args[arg.name] = user;
+                        args[arg.name] = option.user;
                     } else if (arg.type === 8) {
-                        const role = this.getRole(option.roleId);
-                        if (!role) {
-                            return interaction.reply({ content: `Role argument \`${option.name}\` does not exist.`, ephemeral: true });
-                        }
-                        args[arg.name] = role;
+                        args[arg.name] = option.role;
                     } else if (arg.type === 10) {
-                        const number = option.value;
-                        if (isNaN(number)) {
-                            return interaction.reply({ content: `Number argument \`${arg.name}\` must be a number.`, ephemeral: true });
-                        }
-                        args[arg.name] = number;
+                        args[arg.name] = option.value;
                     } else if (arg.type === 3) {
                         args[arg.name] = option.value;
                     } else if (arg.type === 5) {
                         args[arg.name] = option.value;
-                    } else if (arg.type === 12) {
-                        const emoji = this.getEmoji(option.emojiId);
-                        if (!emoji) {
-                            return interaction.reply({ content: `Emoji \`${option.name}\` does not exist.`, ephemeral: true });
-                        }
-                        args[arg.name] = emoji;
+                    } else if (arg.type === 9) {
+                        args[arg.name] = option.role ? option.role : option.user;
                     } else {
                         return interaction.reply({ content: `Argument \`${arg.name}\` is of an invalid type.`, ephemeral: true });
                     }
+                } else {
+                    args[arg.name] = null;
+                }
                 }                
                 interaction.replyEphemeral = async (...args) => {
                     const replyOptions = args[args.length - 1];
@@ -298,6 +283,16 @@ class BaseClient extends Client {
                     collector.fields = collector.fields.fields;
                     return collector;
                 }
+
+                interaction.display = async (modal) => {
+                    await interaction.showModal(modal);
+                }
+
+                interaction.getSubcommand = async (name) => {
+                    const subcommand = await interaction.options.getSubcommand(name);
+                    return subcommand;
+                }
+                
                 return slash.execute(interaction, args);
             }
         }
