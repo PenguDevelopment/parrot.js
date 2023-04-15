@@ -114,17 +114,70 @@ class Bot extends BaseClient {
                                 }
                                 options.push(option);
                             }
+                        } 
+                        let data;
+                        if (command.subcommandGroups) {
+                        let options = [];
+                        for (const subcommandGroup of command.subcommandGroups) {
+                            let subcommandGroupOptions = [];
+                            for (const subcommand of subcommandGroup.subcommands) {
+                            let subcommandOptions = [];
+                            if (subcommand.args) {
+                                for (const arg of subcommand.args) {
+                                let option = {
+                                    name: arg.name,
+                                    name_localizations: arg.name_localizations,
+                                    description: arg.description,
+                                    description_localizations: arg.description_localizations,
+                                    required: arg.required,
+                                    type: arg.type
+                                };
+                                subcommandOptions.push(option);
+                                }
+                            }
+                            let option = {
+                                name: subcommand.name,
+                                name_localizations: subcommand.name_localizations,
+                                description: subcommand.description,
+                                description_localizations: subcommand.description_localizations,
+                                type: 1,
+                                options: subcommandOptions
+                            };
+                            subcommandGroupOptions.push(option);
+                            }
+                            let option = {
+                            name: subcommandGroup.name,
+                            name_localizations: subcommandGroup.name_localizations,
+                            description: subcommandGroup.description,
+                            description_localizations: subcommandGroup.description_localizations,
+                            type: 2,
+                            options: subcommandGroupOptions
+                            };
+                            options.push(option);
                         }
-                        
-                        let data = {
+                        data = {
                             options: options,
                             name: command.name,
+                            type: command.type,
                             name_localizations: command.name_localizations,
                             description: command.description,
                             description_localizations: command.description_localizations,
                             default_permission: command.default_permission,
                             default_member_permissions: command.default_member_permissions,
                             dm_permission: command.dm_permission,
+                        };
+                        } else {
+                        data = {
+                            options: options,
+                            name: command.name,
+                            type: command.type,
+                            name_localizations: command.name_localizations,
+                            description: command.description,
+                            description_localizations: command.description_localizations,
+                            default_permission: command.default_permission,
+                            default_member_permissions: command.default_member_permissions,
+                            dm_permission: command.dm_permission,
+                        };
                         }
                         commands.push(data);
                     }

@@ -8,6 +8,7 @@ class SlashCommand {
         this.args = options.args;
         this.execute = options.execute;
         this.subcommands = options.subcommands;
+        this.subcommandGroups = options.subcommandGroups;
     }
 }
 
