@@ -27,4 +27,4 @@ npm install @ratinchat/parrot.js discord.js@14.x
 
 ## Documentation
 
-For more information, see the [documentation](https://parrot.js.org/).
+For more information, see the [documentation](https://parrot.js.org/) or join the [Discord server](https://discord.gg/uN4dWMj84x).
