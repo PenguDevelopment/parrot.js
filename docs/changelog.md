@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 0.0.8
+
+Added:
+- New support for subcommands.
+- Updated docs to updated stuff. (it was a bit outdated.)
+
 ## Version 0.0.7
 
 Added:
@@ -9,7 +15,7 @@ Added:
 
 Fixed:
 - Slash commands required arguments are not working.
-- If a user inputed too many arguments inputed in text commands, it caused problems.
+- If a user inputs too many arguments in text commands, it caused problems.
 - Random console.logs that were not supposed to be there.
 
 ## Version 0.0.6
