@@ -1,4 +1,4 @@
-# Parrot.js <small>0.0.8</small>
+# Parrot.js <small>0.1.0</small>
 
 > A simple and lightweight discord bot framework
 - Simpler than Discord.js

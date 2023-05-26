@@ -7,6 +7,7 @@ class Bot extends BaseClient {
         this.commands = [];
         this.slashCommands = [];
     }
+
     setStatus(options) {
         let status = [];
         for (let i = 0; i < options.activities.length; i++) {
@@ -46,6 +47,7 @@ class Bot extends BaseClient {
             status: options.status
         });
     }
+
     initEvents() {
         return {
             newEvent: (event) => {

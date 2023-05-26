@@ -1,6 +1,6 @@
 {
   "name": "@ratinchat/parrot.js",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "The simple framework for advanced bots",
   "main": "src/index.js",
   "type": "module",
@@ -26,12 +26,12 @@
   "bugs": {
     "url": "https://github.com/PenguDevelopment/parrot.js/issues"
   },
-  "homepage": "https://github.com/PenguDevelopment/parrot.js#readme",
+  "homepage": "https://parrot.js.org",
   "files": [
     "src",
     "README.md"
   ],
   "dependencies": {
-    "discord.js": "^14.9.0"
+    "discord.js": "^14.11.0"
   }
 }

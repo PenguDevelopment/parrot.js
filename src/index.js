@@ -1,6 +1,7 @@
 import { Bot } from './classes/Bot.js';
 import { ImportCommands } from './functions/importCommands.js';
 import { TextCommand } from './classes/textCommand.js';
+import { Event } from './classes/event.js';
 import { SlashCommand } from './classes/slashCommand.js';
 import checkUpdate from './functions/checkUpdate.js';
 import { EmbedBuilder } from 'discord.js';
@@ -8,6 +9,7 @@ import { ActionRowBuilder } from 'discord.js';
 import { ButtonBuilder } from 'discord.js';
 import { StringSelectMenuBuilder  } from 'discord.js';
 import { ImportSlashCommands } from './functions/importSlashCommands.js';
+import { ImportEvents } from './functions/importEvents.js';
 import { PermissionsBitField } from 'discord.js';
 import { Modal } from './classes/Modal.js';
 
@@ -50,5 +52,7 @@ const parrot = {
         Short: 1,
         Long: 2,
     },
+    ImportEvents,
+    Event,
 };
 export default parrot;

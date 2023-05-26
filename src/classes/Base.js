@@ -10,6 +10,9 @@ class BaseClient extends Client {
         super(options)
         this.intents = options.intents
         this.token = options.token
+        if (options.announcement != false) {
+            console.log('Thanks for using Parrot.js! Unfortunately, I may discontinue this project as I have no idea if anyone is using it, and am getting no feedback. Please consider joining https://discord.gg/uN4dWMj84x to give me your feedback! To turn these announcements off, set the "announcement" option to false in the bot initializer.')
+        }
         if (!this.token) {
             throw new Error(`You need a bot token to start your bot.`)
         } else { 

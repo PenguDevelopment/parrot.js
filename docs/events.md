@@ -18,3 +18,32 @@ await events.newEvent({
 ```
 
 ---
+
+## Importing Events
+
+To import events, use the following code:
+
+```js
+await parrot.ImportEvents(bot, './Events');
+```
+
+---
+
+## External Events
+
+You can make external events like this:
+
+```js
+import parrot from '@ratinchat/parrot.js';
+
+const event = new parrot.Event({
+    name: 'ready',
+    execute: async () => {
+        console.log('it ran!');
+    }
+});
+
+export { event };
+```
+
+---

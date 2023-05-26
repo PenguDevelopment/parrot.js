@@ -1,5 +1,19 @@
 # Changelog
 
+## Version 0.1.0
+
+Added:
+- New support for importing events from a folder.
+- Updated docs to updated stuff again.
+- New announcements log
+
+Fixed:
+- Wrong website being showed on npm.
+
+## Version 0.0.9
+
+Skipped.
+
 ## Version 0.0.8
 
 Added:
