@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 0.1.1
+
+Fixed:
+- Importing bug with windows??? I was on mac when I made the feature, so hopefully this works on every OS now. Please tell me if it doesn't.
+
 ## Version 0.1.0
 
 Added:
