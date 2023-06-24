@@ -1,5 +1,16 @@
 # Changelog
 
+## Version 0.2.0
+
+Added:
+- Added new client options to remove the built in console logging.
+
+Fixed:
+- Fixed the docs mentioning some false stuff.
+
+Removed:
+- The previous annoucment.
+
 ## Version 0.1.1
 
 Fixed:

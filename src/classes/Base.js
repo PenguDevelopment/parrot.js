@@ -10,13 +10,21 @@ class BaseClient extends Client {
         super(options)
         this.intents = options.intents
         this.token = options.token
-        if (options.announcement != false) {
-            console.log('Thanks for using Parrot.js! Unfortunately, I may discontinue this project as I have no idea if anyone is using it, and am getting no feedback. Please consider joining https://discord.gg/uN4dWMj84x to give me your feedback! To turn these announcements off, set the "announcement" option to false in the bot initializer.')
+        if (options.removeBotStartupLog) {
+            this.removeBotStartupLog = options.removeBotStartupLog
+        }
+        if (options.removeMessageArgsCheckMessage) {
+            this.removeMessageArgsCheckMessage = options.removeMessageArgsCheckMessage
+        }
+        if (options.removeInteractionArgsCheckMessage) {
+            this.removeInteractionArgsCheckMessage = options.removeInteractionArgsCheckMessage
         }
         if (!this.token) {
             throw new Error(`You need a bot token to start your bot.`)
-        } else { 
-            console.log(`Your bot is now online!`)
+        } else {
+            if (!this.removeBotStartupLog) {
+                console.log(`Your bot is now online!`)
+            }
             this.on('messageCreate', this.onMessage.bind(this));
             this.on('interactionCreate', this.onInteractionCreate.bind(this));
             this.login(this.token)
@@ -77,7 +85,7 @@ class BaseClient extends Client {
                     const arg = cArgs[i];
                     const mArg = mArgs[arg.name];
                     for (const arg of cArgs) {
-                        if (!mArgs[arg.name]) {
+                        if (!mArgs[arg.name] && !this.removeMessageArgsCheckMessage) {
                             return message.reply(`Argument \`${arg.name}\` is required.`)
                         }
                     }
@@ -85,26 +93,26 @@ class BaseClient extends Client {
                         if (arg.type === 7) {
                             const parsedChannel = mArg.replace(/<#|>/g, "");
                             const channel = this.getChannel(parsedChannel);
-                            if (!channel) {
+                            if (!channel && !this.removeMessageArgsCheckMessage) {
                                 return message.reply(`Channel argument \`${mArg}\` does not exist.`)
                             }
                             args[arg.name] = channel;
                         } else if (arg.type === 6) {
                             const id = mArg.replace(/<@!?|>/g, "");
                             const user = this.getUser(id);
-                            if (!user) {
+                            if (!user && !this.removeMessageArgsCheckMessage) {
                                 return message.reply(`User argument \`${mArg}\` does not exist.`)
                             }
                             args[arg.name] = user;
                         } else if (arg.type === 8) {
                             const parsedRole = mArg.replace(/<@&|>/g, "");
                             const role = this.getRole(parsedRole);
-                            if (!role) {
+                            if (!role && !this.removeMessageArgsCheckMessage) {
                                 return message.reply(`Role argument \`${mArg}\` does not exist.`)
                             }
                             args[arg.name] = role;
                         } else if (arg.type === 10) {
-                            if (isNaN(+mArg) || !Number.isInteger(+mArg)) {
+                            if (isNaN(+mArg) || !Number.isInteger(+mArg) && !this.removeMessageArgsCheckMessage) {
                                 return message.reply(`Number argument \`${arg.name}\` is either missing or of an invalid type.`);
                             }
                             args[arg.name] = mArg;
@@ -115,12 +123,14 @@ class BaseClient extends Client {
                         } else if (arg.type === 12) {
                             const parsedEmoji = mArg.replace(/<:|>/g, "");
                             const emoji = this.getEmoji(parsedEmoji);
-                            if (!emoji) {
+                            if (!emoji && !this.removeMessageArgsCheckMessage) {
                                 return message.reply(`Emoji argument \`${mArg}\` does not exist.`)
                             }
                             args[arg.name] = emoji;
                         } else {
-                            return message.reply(`Argument \`${arg.name}\` is of an invalid type.`)
+                            if (!this.removeMessageArgsCheckMessage) {
+                                return message.reply(`Argument \`${arg.name}\` is of an invalid type.`)
+                            }
                         }
                     }
                 }
@@ -160,13 +170,13 @@ class BaseClient extends Client {
             if (slash.name === interaction.commandName) {
                 if (slash.permissions) {
                     const member = interaction.member;
-                    if (!member) {
+                    if (!member && !this.removeSlashCommandCheckMessage) {
                         return interaction.reply(`This command can only be ran in a guild.`)
                     }
                     const permissions = member.permissions;
                     for (const permission of slash.permissions) {
                         const permissionName = await convertor(permission);
-                        if (!permissions.has(permission)) {
+                        if (!permissions.has(permission) && !this.removeSlashCommandCheckMessage) {
                             return interaction.reply({ content: `:warning: This command requires the \`${permissionName}\` permission.`, ephemeral: true })
                         }
                     }
@@ -236,7 +246,9 @@ class BaseClient extends Client {
                     } else if (arg.type === 9) {
                         args[arg.name] = option.role ? option.role : option.user;
                     } else {
-                        return interaction.reply({ content: `Argument \`${arg.name}\` is of an invalid type.`, ephemeral: true });
+                        if (!this.removeSlashCommandCheckMessage) {
+                            return interaction.reply({ content: `Argument \`${arg.name}\` is of an invalid type.`, ephemeral: true });
+                        }
                     }
                 } else {
                     args[arg.name] = null;

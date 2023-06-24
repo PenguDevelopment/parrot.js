@@ -30,7 +30,7 @@ interactionCommands.newCommand({
             name: 'message',
             description: 'The message to repeat',
             required: true,
-            type: 'string'
+            type: parrot.Options.String
         }
     ],
     execute: async (interaction, { message }) => {
