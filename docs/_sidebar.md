@@ -13,6 +13,7 @@
   - [Embeds](embeds.md)
   - [Subcommands](subcommands.md)
   - [Special Functions](specialfunctions.md)
+  - [Client Options](client.md)
 
 - [Changelog](changelog.md)
 - [Known Issues](knownissues.md)
