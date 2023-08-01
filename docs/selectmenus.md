@@ -38,7 +38,11 @@ You can listen for select menu events like this:
 
 ```js
 let menuFilter = (interaction) => interaction.customId === "revive";
-let menuCollector = await interaction.createCollector('selectMenu', menuFilter, { time: 15000 })
+let menuCollector = await interaction.createCollector(
+  "selectMenu",
+  menuFilter,
+  { time: 15000 },
+);
 
 menuCollector.on("collect", async (interaction) => {
   await interaction.reply(`You revived ${name}!`);

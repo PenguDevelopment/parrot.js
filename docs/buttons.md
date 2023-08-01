@@ -33,7 +33,11 @@ You can listen for button events like this:
 
 ```js
 let buttonFilter = (interaction) => interaction.customId === "revive";
-let buttonCollector = await interaction.createCollector('button', buttonFilter, { time: 15000 })
+let buttonCollector = await interaction.createCollector(
+  "button",
+  buttonFilter,
+  { time: 15000 },
+);
 
 buttonCollector.on("collect", async (interaction) => {
   await interaction.reply(`You revived ${name}!`);

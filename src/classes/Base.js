@@ -62,7 +62,9 @@ class BaseClient extends Client {
             await message.channel.send(content);
           };
           message.ButtonCollector = async ({ ...args }) => {
-            console.log("This function is deprecated. Please use message.createCollector('button') instead.")
+            console.log(
+              "This function is deprecated. Please use message.createCollector('button') instead.",
+            );
             if (args.componentType) {
               const collector =
                 await message.channel.createMessageComponentCollector({
@@ -79,7 +81,9 @@ class BaseClient extends Client {
             }
           };
           message.SelectMenuCollector = async ({ ...args }) => {
-            console.log("This function is deprecated. Please use message.createCollector('selectMenu') instead.")
+            console.log(
+              "This function is deprecated. Please use message.createCollector('selectMenu') instead.",
+            );
             if (args.componentType) {
               const collector =
                 await message.channel.createMessageComponentCollector({
@@ -197,7 +201,9 @@ class BaseClient extends Client {
           await message.channel.send(content);
         };
         message.ButtonCollector = async ({ ...args }) => {
-          console.log("This function is deprecated. Please use message.createCollector('button') instead.")
+          console.log(
+            "This function is deprecated. Please use message.createCollector('button') instead.",
+          );
           const filter = args.filter ? args.filter : (i) => i.isButton();
           const collector = message.channel.createMessageComponentCollector({
             filter,
@@ -206,7 +212,9 @@ class BaseClient extends Client {
           return collector;
         };
         message.SelectMenuCollector = async ({ ...args }) => {
-          console.log("This function is deprecated. Please use message.createCollector('selectMenu') instead.")
+          console.log(
+            "This function is deprecated. Please use message.createCollector('selectMenu') instead.",
+          );
           const filter = args.filter ? args.filter : (i) => i.isSelectMenu();
           const collector = message.channel.createMessageComponentCollector({
             filter,
@@ -216,14 +224,18 @@ class BaseClient extends Client {
         };
         message.createCollector = async (type, filter, options) => {
           if (type === "button") {
-            const defaultFilter = args.filter ? args.filter : (i) => i.isButton();
+            const defaultFilter = args.filter
+              ? args.filter
+              : (i) => i.isButton();
             const collector = message.channel.createMessageComponentCollector({
               filter: filter || defaultFilter,
               ...options,
             });
             return collector;
           } else if (type === "selectMenu") {
-            const defaultFilter = args.filter ? args.filter : (i) => i.isSelectMenu();
+            const defaultFilter = args.filter
+              ? args.filter
+              : (i) => i.isSelectMenu();
             const collector = message.channel.createMessageComponentCollector({
               filter: filter || defaultFilter,
               ...options,
@@ -304,7 +316,9 @@ class BaseClient extends Client {
             }
           };
           interaction.SelectMenuCollector = async ({ ...args }) => {
-            console.log("This function is deprecated. Please use interaction.createCollector('selectMenu') instead.")
+            console.log(
+              "This function is deprecated. Please use interaction.createCollector('selectMenu') instead.",
+            );
             if (args.componentType) {
               const collector =
                 await interaction.channel.createMessageComponentCollector({
@@ -433,7 +447,9 @@ class BaseClient extends Client {
           }
         };
         interaction.SelectMenuCollector = async ({ ...args }) => {
-          console.log("This function is deprecated. Please use interaction.createCollector('selectMenu') instead.")
+          console.log(
+            "This function is deprecated. Please use interaction.createCollector('selectMenu') instead.",
+          );
           if (args.componentType) {
             const collector =
               await interaction.channel.createMessageComponentCollector({
@@ -450,7 +466,7 @@ class BaseClient extends Client {
           }
         };
         interaction.createCollector = async (type, filter, options) => {
-          console.log(...args)
+          console.log(...args);
           if (type === "button") {
             const collector =
               await interaction.channel.createMessageComponentCollector({
@@ -473,7 +489,7 @@ class BaseClient extends Client {
             );
           }
         };
-        
+
         interaction.collectModalInput = async ({ ...args }) => {
           const collector = await interaction
             .awaitModalSubmit({ ...args })

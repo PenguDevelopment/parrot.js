@@ -3,6 +3,7 @@
 ## Version 0.3.0
 
 Added:
+
 - Dev experience improved with addition of eslint and prettier.
 - New collector handling
 - Deprecation for old collector.
