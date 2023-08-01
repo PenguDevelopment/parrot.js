@@ -1,5 +1,5 @@
-// eslint-disable-next-line
 import pkg from "../../package.json" assert { type: "json" };
+
 import { exec } from "child_process";
 
 async function checkUpdate() {

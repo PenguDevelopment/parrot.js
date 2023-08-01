@@ -20,9 +20,14 @@ module.exports = {
       }
     }
   ],
+  parser: "@babel/eslint-parser",
   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module'
+    requireConfigFile: false,
+    babelOptions: {
+      plugins: [
+        require.resolve("@babel/plugin-syntax-import-assertions")
+      ]
+    }
   },
   rules: {
   }
