@@ -1,6 +1,4 @@
-
-![parrot.js](https://socialify.git.ci/PenguDevelopment/parrot.js/image?description=1&font=Source%20Code%20Pro&language=1&logo=https%3A%2F%2Fi.ibb.co%2FhcwKcYD%2Fparrot.png&name=1&owner=1&pattern=Solid&theme=Dark)
----
+## ![parrot.js](https://socialify.git.ci/PenguDevelopment/parrot.js/image?description=1&font=Source%20Code%20Pro&language=1&logo=https%3A%2F%2Fi.ibb.co%2FhcwKcYD%2Fparrot.png&name=1&owner=1&pattern=Solid&theme=Dark)
 
 ## Features
 
@@ -15,7 +13,7 @@
 
 `@ratinchat/parrot.js` depends on the following packages. Be sure to install these along with this package!
 
--   [`discord.js`](https://www.npmjs.com/package/discord.js)
+- [`discord.js`](https://www.npmjs.com/package/discord.js)
 
 You can use the following command to install this package, or replace `npm install` with your package manager of choice.
 

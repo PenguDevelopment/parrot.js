@@ -10,10 +10,10 @@ To create an event, use the following code:
 
 ```js
 await events.newEvent({
-    name: 'ready',
-    execute: async () => {
-        console.log('it ran!');
-    }
+  name: "ready",
+  execute: async () => {
+    console.log("it ran!");
+  },
 });
 ```
 
@@ -24,7 +24,7 @@ await events.newEvent({
 To import events, use the following code:
 
 ```js
-await parrot.ImportEvents(bot, './Events');
+await parrot.ImportEvents(bot, "./Events");
 ```
 
 ---
@@ -34,13 +34,13 @@ await parrot.ImportEvents(bot, './Events');
 You can make external events like this:
 
 ```js
-import parrot from '@ratinchat/parrot.js';
+import parrot from "@ratinchat/parrot.js";
 
 const event = new parrot.Event({
-    name: 'ready',
-    execute: async () => {
-        console.log('it ran!');
-    }
+  name: "ready",
+  execute: async () => {
+    console.log("it ran!");
+  },
 });
 
 export { event };

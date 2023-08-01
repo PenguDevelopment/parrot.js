@@ -1,5 +1,6 @@
-import pkg from '../../package.json' assert { type: 'json' };
-import { exec } from 'child_process';
+// eslint-disable-next-line
+import pkg from "../../package.json" assert { type: "json" };
+import { exec } from "child_process";
 
 async function checkUpdate() {
   exec(`npm view ${pkg.name} version`, async (error, stdout, stderr) => {
@@ -9,7 +10,9 @@ async function checkUpdate() {
     }
     const latestVersion = stdout.trim();
     if (latestVersion !== pkg.version) {
-      console.log(`There is a new version of ${pkg.name} available: ${latestVersion}.`);
+      console.log(
+        `There is a new version of ${pkg.name} available: ${latestVersion}.`,
+      );
       console.log(`To update, run: npm install ${pkg.name}@${latestVersion}`);
     }
   });

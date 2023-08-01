@@ -1,7 +1,8 @@
 ## Parrot.js
 
 ## What it is
-Parrot.js is a simple framework that makes it easy to create discord bots. It is built on top of Discord.js and is constantly being updated.  
+
+Parrot.js is a simple framework that makes it easy to create discord bots. It is built on top of Discord.js and is constantly being updated.
 
 See the [Quick start](quickstart.md) guide for more details.
 
