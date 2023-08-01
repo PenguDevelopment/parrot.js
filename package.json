@@ -1,6 +1,6 @@
 {
   "name": "@ratinchat/parrot.js",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "The simple framework for advanced bots",
   "main": "src/index.js",
   "type": "module",
