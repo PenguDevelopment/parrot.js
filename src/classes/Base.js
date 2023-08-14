@@ -72,11 +72,11 @@ class BaseClient extends Client {
                 });
               return collector;
             } else {
-              const collector =
-                message.channel.createMessageComponentCollector({
-                  componentType: 2,
-                  ...args,
-                });
+            const collector =
+              await message.channel.createMessageComponentCollector({
+                componentType: 2,
+                ...args,
+              });
               return collector;
             }
           };
