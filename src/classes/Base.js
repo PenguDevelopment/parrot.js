@@ -104,7 +104,7 @@ class BaseClient extends Client {
               const collector =
                 await message.channel.createMessageComponentCollector({
                   componentType: 2,
-                  filter,
+                  filter: filter.bind(message),
                   ...options,
                 });
               return collector;
@@ -112,7 +112,7 @@ class BaseClient extends Client {
               const collector =
                 await message.channel.createMessageComponentCollector({
                   componentType: 3,
-                  filter,
+                  filter: filter.bind(message),
                   ...options,
                 });
               return collector;
@@ -471,7 +471,7 @@ class BaseClient extends Client {
             const collector =
               await interaction.channel.createMessageComponentCollector({
                 componentType: 2,
-                filter,
+                filter: filter.bind(interaction),
                 ...options,
               });
             return collector;
@@ -479,7 +479,7 @@ class BaseClient extends Client {
             const collector =
               await interaction.channel.createMessageComponentCollector({
                 componentType: 3,
-                filter,
+                filter: filter.bind(interaction),
                 ...options,
               });
             return collector;
