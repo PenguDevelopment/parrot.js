@@ -62,18 +62,18 @@ class BaseClient extends Client {
             await message.channel.send(content);
           };
           message.ButtonCollector = async ({ ...args }) => {
-            console.log(
+            console.warn(
               "This function is deprecated. Please use message.createCollector('button') instead. More info in docs.",
             );
             if (args.componentType) {
               const collector =
-                await message.channel.createMessageComponentCollector({
+                message.channel.createMessageComponentCollector({
                   ...args,
                 });
               return collector;
             } else {
               const collector =
-                await message.channel.createMessageComponentCollector({
+                message.channel.createMessageComponentCollector({
                   componentType: 2,
                   ...args,
                 });
@@ -81,18 +81,18 @@ class BaseClient extends Client {
             }
           };
           message.SelectMenuCollector = async ({ ...args }) => {
-            console.log(
+            console.warn(
               "This function is deprecated. Please use message.createCollector('selectMenu') instead. More info in docs.",
             );
             if (args.componentType) {
               const collector =
-                await message.channel.createMessageComponentCollector({
+                message.channel.createMessageComponentCollector({
                   ...args,
                 });
               return collector;
             } else {
               const collector =
-                await message.channel.createMessageComponentCollector({
+                message.channel.createMessageComponentCollector({
                   componentType: 3,
                   ...args,
                 });
@@ -100,9 +100,12 @@ class BaseClient extends Client {
             }
           };
           message.createCollector = async (type, filter, options) => {
+            console.warn(
+              "This function is deprecated. Please use message.createCollector('button') or message.createCollector('selectMenu') instead. More info in docs.",
+            );
             if (type === "button") {
               const collector =
-                await message.channel.createMessageComponentCollector({
+                message.channel.createMessageComponentCollector({
                   componentType: 2,
                   filter,
                   ...options,
@@ -110,7 +113,7 @@ class BaseClient extends Client {
               return collector;
             } else if (type === "selectMenu") {
               const collector =
-                await message.channel.createMessageComponentCollector({
+                message.channel.createMessageComponentCollector({
                   componentType: 3,
                   filter,
                   ...options,
@@ -272,6 +275,9 @@ class BaseClient extends Client {
   async onInteractionCreate(interaction) {
     for (const slash of this.slashCommands) {
       if (slash.name === interaction.commandName) {
+        interaction.ButtonCollector = this.ButtonCollector.bind(interaction);
+        interaction.SelectMenuCollector = this.SelectMenuCollector.bind(interaction);
+        interaction.createCollector = this.createCollector.bind(interaction);
         if (slash.permissions) {
           const member = interaction.member;
           if (!member && !this.removeSlashCommandCheckMessage) {
