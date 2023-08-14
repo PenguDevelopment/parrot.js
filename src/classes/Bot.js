@@ -60,7 +60,7 @@ class Bot extends BaseClient {
     this.prefix = options.prefix;
     return {
       newCommand: (command) => {
-        this.commands.push(command);
+        this.commands.push(command.bind(this));
       },
     };
   }
@@ -72,7 +72,7 @@ class Bot extends BaseClient {
   initSlashCommands() {
     return {
       newCommand: (command) => {
-        this.slashCommands.push(command);
+        this.slashCommands.push(command.bind(this));
       },
       registerAll: async (token, bot) => {
         await bot.onReady(async () => {
