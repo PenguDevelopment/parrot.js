@@ -33,7 +33,43 @@ class BaseClient extends Client {
     }
   }
 
-  async onMessage(message) {
+    async onMessage(message) {
+        message.send = async (content) => {
+            await message.channel.send(content);
+        };
+        message.ButtonCollector = async ({ ...args }) => {
+            const collector = await message.channel.createMessageComponentCollector({
+                componentType: 2,
+                ...args,
+            });
+            return collector;
+        };
+        message.SelectMenuCollector = async ({ ...args }) => {
+            const collector = await message.channel.createMessageComponentCollector({
+                componentType: 3,
+                ...args,
+            });
+            return collector;
+        };
+        message.createCollector = async (type, filter, options) => {
+            if (type === "button") {
+                const collector = await message.channel.createMessageComponentCollector({
+                    componentType: 2,
+                    filter,
+                    ...options,
+                });
+                return collector;
+            } else if (type === "selectMenu") {
+                const collector = await message.channel.createMessageComponentCollector({
+                    componentType: 3,
+                    filter,
+                    ...options,
+                });
+                return collector;
+            } else {
+                throw new Error(`Invalid collector type. Valid types are 'button' and 'selectMenu'.`);
+            }
+        };
     for (const command of this.commands) {
       const prefix = command.prefix ? command.prefix : this.prefix;
       if (message.content.startsWith(prefix + command.name)) {
@@ -270,6 +306,42 @@ class BaseClient extends Client {
   }
 
   async onInteractionCreate(interaction) {
+        interaction.send = async (content) => {
+            await interaction.channel.send(content);
+        };
+        interaction.ButtonCollector = async ({ ...args }) => {
+            const collector = await interaction.channel.createMessageComponentCollector({
+                componentType: 2,
+                ...args,
+            });
+            return collector;
+        };
+        interaction.SelectMenuCollector = async ({ ...args }) => {
+            const collector = await interaction.channel.createMessageComponentCollector({
+                componentType: 3,
+                ...args,
+            });
+            return collector;
+        };
+        interaction.createCollector = async (type, filter, options) => {
+            if (type === "button") {
+                const collector = await interaction.channel.createMessageComponentCollector({
+                    componentType: 2,
+                    filter,
+                    ...options,
+                });
+                return collector;
+            } else if (type === "selectMenu") {
+                const collector = await interaction.channel.createMessageComponentCollector({
+                    componentType: 3,
+                    filter,
+                    ...options,
+                });
+                return collector;
+            } else {
+                throw new Error(`Invalid collector type. Valid types are 'button' and 'selectMenu'.`);
+            }
+        };
     for (const slash of this.slashCommands) {
       if (slash.name === interaction.commandName) {
         if (slash.permissions) {
