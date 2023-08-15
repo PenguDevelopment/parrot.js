@@ -60,6 +60,42 @@ class Bot extends BaseClient {
     this.prefix = options.prefix;
     return {
       newCommand: (command) => {
+        command.send = async (content) => {
+          await command.channel.send(content);
+        };
+        command.ButtonCollector = async ({ ...args }) => {
+          const collector = await command.channel.createMessageComponentCollector({
+            componentType: 2,
+            ...args,
+          });
+          return collector;
+        };
+        command.SelectMenuCollector = async ({ ...args }) => {
+          const collector = await command.channel.createMessageComponentCollector({
+            componentType: 3,
+            ...args,
+          });
+          return collector;
+        };
+        command.createCollector = async (type, filter, options) => {
+          if (type === "button") {
+            const collector = await command.channel.createMessageComponentCollector({
+              componentType: 2,
+              filter,
+              ...options,
+            });
+            return collector;
+          } else if (type === "selectMenu") {
+            const collector = await command.channel.createMessageComponentCollector({
+              componentType: 3,
+              filter,
+              ...options,
+            });
+            return collector;
+          } else {
+            throw new Error(`Invalid collector type. Valid types are 'button' and 'selectMenu'.`);
+          }
+        };
         this.commands.push(command);
       },
     };
@@ -72,13 +108,49 @@ class Bot extends BaseClient {
   initSlashCommands() {
     return {
       newCommand: (command) => {
+        command.send = async (content) => {
+          await command.channel.send(content);
+        };
+        command.ButtonCollector = async ({ ...args }) => {
+          const collector = await command.channel.createMessageComponentCollector({
+            componentType: 2,
+            ...args,
+          });
+          return collector;
+        };
+        command.SelectMenuCollector = async ({ ...args }) => {
+          const collector = await command.channel.createMessageComponentCollector({
+            componentType: 3,
+            ...args,
+          });
+          return collector;
+        };
+        command.createCollector = async (type, filter, options) => {
+          if (type === "button") {
+            const collector = await command.channel.createMessageComponentCollector({
+              componentType: 2,
+              filter,
+              ...options,
+            });
+            return collector;
+          } else if (type === "selectMenu") {
+            const collector = await command.channel.createMessageComponentCollector({
+              componentType: 3,
+              filter,
+              ...options,
+            });
+            return collector;
+          } else {
+            throw new Error(`Invalid collector type. Valid types are 'button' and 'selectMenu'.`);
+          }
+        };
         this.slashCommands.push(command);
       },
       registerAll: async (token, bot) => {
-        await bot.onReady(async () => {
-          const rest = new REST({ version: "10" }).setToken(token);
-          const commands = [];
-          for (const command of this.slashCommands) {
+        // existing code...
+      },
+    };
+  }
             const options = [];
             if (command.args) {
               for (const arg of command.args) {
