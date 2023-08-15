@@ -61,67 +61,9 @@ class BaseClient extends Client {
           message.send = async (content) => {
             await message.channel.send(content);
           };
-          message.ButtonCollector = async ({ ...args }) => {
-            console.log(
-              "This function is deprecated. Please use message.createCollector('button') instead. More info in docs.",
-            );
-            if (args.componentType) {
-              const collector =
-                await message.channel.createMessageComponentCollector({
-                  ...args,
-                });
-              return collector;
-            } else {
-              const collector =
-                await message.channel.createMessageComponentCollector({
-                  componentType: 2,
-                  ...args,
-                });
-              return collector;
-            }
-          };
-          message.SelectMenuCollector = async ({ ...args }) => {
-            console.log(
-              "This function is deprecated. Please use message.createCollector('selectMenu') instead. More info in docs.",
-            );
-            if (args.componentType) {
-              const collector =
-                await message.channel.createMessageComponentCollector({
-                  ...args,
-                });
-              return collector;
-            } else {
-              const collector =
-                await message.channel.createMessageComponentCollector({
-                  componentType: 3,
-                  ...args,
-                });
-              return collector;
-            }
-          };
-          message.createCollector = async (type, filter, options) => {
-            if (type === "button") {
-              const collector =
-                await message.channel.createMessageComponentCollector({
-                  componentType: 2,
-                  filter,
-                  ...options,
-                });
-              return collector;
-            } else if (type === "selectMenu") {
-              const collector =
-                await message.channel.createMessageComponentCollector({
-                  componentType: 3,
-                  filter,
-                  ...options,
-                });
-              return collector;
-            } else {
-              throw new Error(
-                `Invalid collector type. Valid types are 'button' and 'selectMenu'.`,
-              );
-            }
-          };
+          message.ButtonCollector = this.ButtonCollector;
+          message.SelectMenuCollector = this.SelectMenuCollector;
+          message.createCollector = this.createCollector;
 
           return command.execute(message);
         }
@@ -523,6 +465,68 @@ class BaseClient extends Client {
   onReady(callback) {
     this.on("ready", callback);
   }
+
+  ButtonCollector = async ({ ...args }) => {
+    if (args.componentType) {
+      const collector =
+        await this.channel.createMessageComponentCollector({
+          ...args,
+        });
+      return collector;
+    } else {
+      const collector =
+        await this.channel.createMessageComponentCollector({
+          componentType: 2,
+          ...args,
+        });
+      return collector;
+    }
+  };
+
+  SelectMenuCollector = async ({ ...args }) => {
+    console.log(
+      "This function is deprecated. Please use this.createCollector('selectMenu') instead. More info in docs.",
+    );
+    if (args.componentType) {
+      const collector =
+        await this.channel.createMessageComponentCollector({
+          ...args,
+        });
+      return collector;
+    } else {
+      const collector =
+        await this.channel.createMessageComponentCollector({
+          componentType: 3,
+          ...args,
+        });
+      return collector;
+    }
+  };
+
+  createCollector = async (type, filter, options) => {
+    console.log(...args);
+    if (type === "button") {
+      const collector =
+        await this.channel.createMessageComponentCollector({
+          componentType: 2,
+          filter,
+          ...options,
+        });
+      return collector;
+    } else if (type === "selectMenu") {
+      const collector =
+        await this.channel.createMessageComponentCollector({
+          componentType: 3,
+          filter,
+          ...options,
+        });
+      return collector;
+    } else {
+      throw new Error(
+        `Invalid collector type. Valid types are 'button' and 'selectMenu'.`,
+      );
+    }
+  };
 }
 
 export { BaseClient };
