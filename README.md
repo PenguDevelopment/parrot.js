@@ -26,3 +26,18 @@ npm install @ratinchat/parrot.js discord.js@14.x
 ## Documentation
 
 For more information, see the [documentation](https://parrot.js.org/) or join the [Discord server](https://discord.gg/uN4dWMj84x).
+
+---
+
+## Todo
+
+- [ ] Add auto-complete support
+- [ ] Add more coverage of the discord.js v14 library
+
+And much much more!
+
+---
+
+### We need you!
+
+Please consider suggesting new features, reporting bugs, or contributing to the project. We are always looking for new ideas and help from the community to make this project better.

@@ -1,5 +1,14 @@
 # Changelog
 
+## Version 0.5.0
+
+Fixed:
+
+- Fixed how the custom functions were injected which allows nested functions to work properly. Like modals.
+- Added new sweep bot. Hopefully this will allow for more frequent updates.
+
+More coming soon as we prepare for initial release at 1.0.0! 🎉
+
 ## Version 0.3.0
 
 Added:

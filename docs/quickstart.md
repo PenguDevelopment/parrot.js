@@ -192,7 +192,7 @@ There are a few new changes to parrot.js that have been made.
 Here is a list of all the current options:
 
 ```js
-User,
+  User,
   Mentionable,
   Channel,
   Role,

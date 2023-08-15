@@ -37,6 +37,8 @@ modal.addFields([
 
 !> Make sure to add fields to your modal after you initialize it, otherwise it will not work.
 
+!> Make sure you put your fields in an array or it will not work!
+
 ---
 
 ## Displaying Modals

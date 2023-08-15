@@ -34,6 +34,70 @@ class BaseClient extends Client {
   }
 
   async onMessage(message) {
+    message.send = async (content) => {
+      await message.channel.send(content);
+    };
+    message.ButtonCollector = async ({ ...args }) => {
+      console.warn(
+        "This function is deprecated. Please use message.createCollector('button') instead. More info in docs.",
+      );
+      if (args.componentType) {
+        const collector =
+          await message.channel.createMessageComponentCollector({
+            ...args,
+          });
+        return collector;
+      } else {
+        const collector =
+          await message.channel.createMessageComponentCollector({
+            componentType: 2,
+            ...args,
+          });
+        return collector;
+      }
+    };
+    message.SelectMenuCollector = async ({ ...args }) => {
+      console.warn(
+        "This function is deprecated. Please use message.createCollector('selectMenu') instead. More info in docs.",
+      );
+      if (args.componentType) {
+        const collector =
+          await message.channel.createMessageComponentCollector({
+            ...args,
+          });
+        return collector;
+      } else {
+        const collector =
+          await message.channel.createMessageComponentCollector({
+            componentType: 3,
+            ...args,
+          });
+        return collector;
+      }
+    };
+    message.createCollector = async (type, filter, options) => {
+      if (type === "button") {
+        const collector =
+          await message.channel.createMessageComponentCollector({
+            componentType: 2,
+            filter,
+            ...options,
+          });
+        return collector;
+      } else if (type === "selectMenu") {
+        const collector =
+          await message.channel.createMessageComponentCollector({
+            componentType: 3,
+            filter,
+            ...options,
+          });
+        return collector;
+      } else {
+        throw new Error(
+          `Invalid collector type. Valid types are 'button' and 'selectMenu'.`,
+        );
+      }
+    };
     for (const command of this.commands) {
       const prefix = command.prefix ? command.prefix : this.prefix;
       if (message.content.startsWith(prefix + command.name)) {
@@ -49,7 +113,6 @@ class BaseClient extends Client {
               mArgs[arg.name] = messageContent;
               messageContent = "";
             } else {
-              // make sure to account for extra spaces
               const [firstArg, ...rest] = messageContent.split(" ");
               mArgs[arg.name] = firstArg;
               messageContent = rest.join(" ");
@@ -58,74 +121,6 @@ class BaseClient extends Client {
         }
 
         if (!cArgs) {
-          message.send = async (content) => {
-            await message.channel.send(content);
-          };
-          message.ButtonCollector = async ({ ...args }) => {
-            console.warn(
-              "This function is deprecated. Please use message.createCollector('button') instead. More info in docs.",
-            );
-            if (args.componentType) {
-              const collector =
-                message.channel.createMessageComponentCollector({
-                  ...args,
-                });
-              return collector;
-            } else {
-            const collector =
-              await message.channel.createMessageComponentCollector({
-                componentType: 2,
-                ...args,
-              });
-              return collector;
-            }
-          };
-          message.SelectMenuCollector = async ({ ...args }) => {
-            console.warn(
-              "This function is deprecated. Please use message.createCollector('selectMenu') instead. More info in docs.",
-            );
-            if (args.componentType) {
-              const collector =
-                message.channel.createMessageComponentCollector({
-                  ...args,
-                });
-              return collector;
-            } else {
-              const collector =
-                message.channel.createMessageComponentCollector({
-                  componentType: 3,
-                  ...args,
-                });
-              return collector;
-            }
-          };
-          message.createCollector = async (type, filter, options) => {
-            console.warn(
-              "This function is deprecated. Please use message.createCollector('button') or message.createCollector('selectMenu') instead. More info in docs.",
-            );
-            if (type === "button") {
-              const collector =
-                message.channel.createMessageComponentCollector({
-                  componentType: 2,
-                  filter,
-                  ...options,
-                });
-              return collector;
-            } else if (type === "selectMenu") {
-              const collector =
-                message.channel.createMessageComponentCollector({
-                  componentType: 3,
-                  filter,
-                  ...options,
-                });
-              return collector;
-            } else {
-              throw new Error(
-                `Invalid collector type. Valid types are 'button' and 'selectMenu'.`,
-              );
-            }
-          };
-
           return command.execute(message);
         }
 
@@ -199,58 +194,6 @@ class BaseClient extends Client {
             }
           }
         }
-
-        message.send = async (content) => {
-          await message.channel.send(content);
-        };
-        message.ButtonCollector = async ({ ...args }) => {
-          console.log(
-            "This function is deprecated. Please use message.createCollector('button') instead. More info in docs.",
-          );
-          const filter = args.filter ? args.filter : (i) => i.isButton();
-          const collector = message.channel.createMessageComponentCollector({
-            filter,
-            ...args,
-          });
-          return collector;
-        };
-        message.SelectMenuCollector = async ({ ...args }) => {
-          console.log(
-            "This function is deprecated. Please use message.createCollector('selectMenu') instead. More info in docs.",
-          );
-          const filter = args.filter ? args.filter : (i) => i.isSelectMenu();
-          const collector = message.channel.createMessageComponentCollector({
-            filter,
-            ...args,
-          });
-          return collector;
-        };
-        message.createCollector = async (type, filter, options) => {
-          if (type === "button") {
-            const defaultFilter = args.filter
-              ? args.filter
-              : (i) => i.isButton();
-            const collector = message.channel.createMessageComponentCollector({
-              filter: filter || defaultFilter,
-              ...options,
-            });
-            return collector;
-          } else if (type === "selectMenu") {
-            const defaultFilter = args.filter
-              ? args.filter
-              : (i) => i.isSelectMenu();
-            const collector = message.channel.createMessageComponentCollector({
-              filter: filter || defaultFilter,
-              ...options,
-            });
-            return collector;
-          } else {
-            throw new Error(
-              `Invalid collector type. Valid types are 'button' and 'selectMenu'.`,
-            );
-          }
-        };
-
         await command.execute(message, args);
       }
     }
@@ -273,36 +216,7 @@ class BaseClient extends Client {
   }
 
   async onInteractionCreate(interaction) {
-    for (const slash of this.slashCommands) {
-      if (slash.name === interaction.commandName) {
-        interaction.ButtonCollector = this.ButtonCollector.bind(interaction);
-        interaction.SelectMenuCollector = this.SelectMenuCollector.bind(interaction);
-        interaction.createCollector = this.createCollector.bind(interaction);
-        if (slash.permissions) {
-          const member = interaction.member;
-          if (!member && !this.removeSlashCommandCheckMessage) {
-            return interaction.reply(
-              `This command can only be ran in a guild.`,
-            );
-          }
-          const permissions = member.permissions;
-          for (const permission of slash.permissions) {
-            const permissionName = await convertor(permission);
-            if (
-              !permissions.has(permission) &&
-              !this.removeSlashCommandCheckMessage
-            ) {
-              return interaction.reply({
-                content: `:warning: This command requires the \`${permissionName}\` permission.`,
-                ephemeral: true,
-              });
-            }
-          }
-        }
-        const cArgs = slash.args;
-
-        if (!cArgs) {
-          interaction.replyEphemeral = async (...args) => {
+     interaction.replyEphemeral = async (...args) => {
             await interaction.reply(...args);
           };
           interaction.ButtonCollector = async ({ ...args }) => {
@@ -322,7 +236,7 @@ class BaseClient extends Client {
             }
           };
           interaction.SelectMenuCollector = async ({ ...args }) => {
-            console.log(
+            console.warn(
               "This function is deprecated. Please use interaction.createCollector('selectMenu') instead. More info in docs.",
             );
             if (args.componentType) {
@@ -382,7 +296,32 @@ class BaseClient extends Client {
             const subcommand = await interaction.options.getSubcommand(name);
             return subcommand;
           };
+    for (const slash of this.slashCommands) {
+      if (slash.name === interaction.commandName) {
+        if (slash.permissions) {
+          const member = interaction.member;
+          if (!member && !this.removeSlashCommandCheckMessage) {
+            return interaction.reply(
+              `This command can only be ran in a guild.`,
+            );
+          }
+          const permissions = member.permissions;
+          for (const permission of slash.permissions) {
+            const permissionName = await convertor(permission);
+            if (
+              !permissions.has(permission) &&
+              !this.removeSlashCommandCheckMessage
+            ) {
+              return interaction.reply({
+                content: `:warning: This command requires the \`${permissionName}\` permission.`,
+                ephemeral: true,
+              });
+            }
+          }
+        }
+        const cArgs = slash.args;
 
+        if (!cArgs) {
           return slash.execute(interaction);
         }
 
@@ -417,104 +356,6 @@ class BaseClient extends Client {
             args[arg.name] = null;
           }
         }
-        interaction.replyEphemeral = async (...args) => {
-          const replyOptions = args[args.length - 1];
-          if (replyOptions && typeof replyOptions === "object") {
-            replyOptions.ephemeral = true;
-          } else {
-            switch (typeof args[0]) {
-              case "string":
-                args = [{ content: args[0], ephemeral: true }];
-                break;
-              case "object":
-                args = [{ embeds: args, ephemeral: true }];
-                break;
-              default:
-                args = [{ content: args, ephemeral: true }];
-                break;
-            }
-          }
-          await interaction.reply(...args);
-        };
-        interaction.ButtonCollector = async ({ ...args }) => {
-          if (args.componentType) {
-            const collector =
-              await interaction.channel.createMessageComponentCollector({
-                ...args,
-              });
-            return collector;
-          } else {
-            const collector =
-              await interaction.channel.createMessageComponentCollector({
-                componentType: 2,
-                ...args,
-              });
-            return collector;
-          }
-        };
-        interaction.SelectMenuCollector = async ({ ...args }) => {
-          console.log(
-            "This function is deprecated. Please use interaction.createCollector('selectMenu') instead. More info in docs.",
-          );
-          if (args.componentType) {
-            const collector =
-              await interaction.channel.createMessageComponentCollector({
-                ...args,
-              });
-            return collector;
-          } else {
-            const collector =
-              await interaction.channel.createMessageComponentCollector({
-                componentType: 3,
-                ...args,
-              });
-            return collector;
-          }
-        };
-        interaction.createCollector = async (type, filter, options) => {
-          console.log(...args);
-          if (type === "button") {
-            const collector =
-              await interaction.channel.createMessageComponentCollector({
-                componentType: 2,
-                filter,
-                ...options,
-              });
-            return collector;
-          } else if (type === "selectMenu") {
-            const collector =
-              await interaction.channel.createMessageComponentCollector({
-                componentType: 3,
-                filter,
-                ...options,
-              });
-            return collector;
-          } else {
-            throw new Error(
-              `Invalid collector type. Valid types are 'button' and 'selectMenu'.`,
-            );
-          }
-        };
-
-        interaction.collectModalInput = async ({ ...args }) => {
-          const collector = await interaction
-            .awaitModalSubmit({ ...args })
-            .catch((error) => {
-              console.log(error);
-            });
-          collector.fields = collector.fields.fields;
-          return collector;
-        };
-
-        interaction.display = async (modal) => {
-          await interaction.showModal(modal);
-        };
-
-        interaction.getSubcommand = async (name) => {
-          const subcommand = await interaction.options.getSubcommand(name);
-          return subcommand;
-        };
-
         return slash.execute(interaction, args);
       }
     }

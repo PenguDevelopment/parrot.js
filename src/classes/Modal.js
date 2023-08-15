@@ -35,7 +35,7 @@ class Modal extends ModalBuilder {
 
       const row = new ActionRowBuilder().addComponents(input);
       this.addComponents(row);
-    });
+    })
   }
 }
 
