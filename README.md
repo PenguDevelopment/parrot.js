@@ -31,7 +31,6 @@ For more information, see the [documentation](https://parrot.js.org/) or join th
 
 ## Todo
 
-- [ ] Add auto-complete support
 - [ ] Add more coverage of the discord.js v14 library
 
 And much much more!
