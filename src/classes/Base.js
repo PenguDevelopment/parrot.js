@@ -377,7 +377,13 @@ class BaseClient extends Client {
             return subcommand;
           };
 
-          return slash.execute(interaction);
+          const context = {
+            ...interaction,
+            ButtonCollector: this.ButtonCollector,
+            SelectMenuCollector: this.SelectMenuCollector,
+            createCollector: this.createCollector,
+          };
+          return slash.execute(context);
         }
 
         const args = {};
