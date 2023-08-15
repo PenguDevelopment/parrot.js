@@ -5,23 +5,33 @@ declare module "parrot.js" {
     initCommands(options: any): any;
     getPing(): number;
     initSlashCommands(): any;
-    // Define the rest of the properties and methods of the Bot class
+    method1(): void;
+    method2(): void;
+    property1: string;
   }
 
   export interface TextCommand {
-    // Define the properties and methods of the TextCommand class
+    method1(): void;
+    method2(): void;
+    property1: string;
   }
 
   export interface SlashCommand {
-    // Define the properties and methods of the SlashCommand class
+    method1(): void;
+    method2(): void;
+    property1: string;
   }
 
   export interface Event {
-    // Define the properties and methods of the Event class
+    method1(): void;
+    method2(): void;
+    property1: string;
   }
 
   export interface Modal {
-    // Define the properties and methods of the Modal class
+    method1(): void;
+    method2(): void;
+    property1: string;
   }
 
   // Define function types for the functions in the library
