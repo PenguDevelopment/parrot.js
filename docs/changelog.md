@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 0.5.3
+
+Added:
+
+- Context Menu support
+
+Small minor update to add the basics of context menu support.
+
 ## Version 0.5.0
 
 Fixed:

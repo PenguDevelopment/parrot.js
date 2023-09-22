@@ -14,6 +14,7 @@ import { ImportSlashCommands } from "./functions/importSlashCommands.js";
 import { ImportEvents } from "./functions/importEvents.js";
 import { Event } from "./classes/event.js";
 import { Modal } from "./classes/Modal.js";
+import { ContextMenuCommand } from "./classes/ContextMenus.js";
 
 checkUpdate();
 
@@ -43,6 +44,7 @@ const parrot = {
   ImportCommands,
   ImportSlashCommands,
   TextCommand,
+  ContextMenuCommand,
   Embed: EmbedBuilder,
   ActionRow: ActionRowBuilder,
   Button: ButtonBuilder,
@@ -56,6 +58,11 @@ const parrot = {
   },
   ImportEvents,
   Event,
+  ContextMenuType: {
+    ChatInput: 1,
+    User: 2,
+    Message: 3,
+  },
 };
 
 export default parrot;

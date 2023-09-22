@@ -6,6 +6,7 @@ class Bot extends BaseClient {
     super(options);
     this.commands = [];
     this.slashCommands = [];
+    this.contextMenus = [];
   }
 
   setStatus(options) {
@@ -74,11 +75,21 @@ class Bot extends BaseClient {
       newCommand: (command) => {
         this.slashCommands.push(command);
       },
+      newContextMenu: (contextMenu) => {
+        this.contextMenus.push(contextMenu);
+      },
       registerAll: async (token, bot) => {
+        const combinedCommands = [];
+        for (const command of this.slashCommands) {
+          combinedCommands.push(command);
+        }
+        for (const command of this.contextMenus) {
+          combinedCommands.push(command);
+        }
         await bot.onReady(async () => {
           const rest = new REST({ version: "10" }).setToken(token);
           const commands = [];
-          for (const command of this.slashCommands) {
+          for (const command of combinedCommands) {
             const options = [];
             if (command.args) {
               for (const arg of command.args) {

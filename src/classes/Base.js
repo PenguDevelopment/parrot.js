@@ -296,6 +296,19 @@ class BaseClient extends Client {
             const subcommand = await interaction.options.getSubcommand(name);
             return subcommand;
           };
+    if (interaction.isContextMenuCommand()) {
+      const { commandName } = interaction;
+
+      for (const contextMenu of this.contextMenus) {
+        if (contextMenu.name === commandName) {
+          try {
+            await contextMenu.execute(interaction);
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      }
+    }
     for (const slash of this.slashCommands) {
       if (slash.name === interaction.commandName) {
         if (slash.permissions) {

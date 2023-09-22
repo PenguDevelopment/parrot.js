@@ -9,6 +9,7 @@ class SlashCommand {
     this.execute = options.execute;
     this.subcommands = options.subcommands;
     this.subcommandGroups = options.subcommandGroups;
+    this.type = options.type;
   }
 }
 

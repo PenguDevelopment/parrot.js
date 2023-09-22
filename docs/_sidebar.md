@@ -14,6 +14,7 @@
   - [Subcommands](subcommands.md)
   - [Special Functions](specialfunctions.md)
   - [Client Options](client.md)
+  - [Context Menu](contextmenu.md)
 
 - [Changelog](changelog.md)
 - [Known Issues](knownissues.md)
