@@ -1,13 +1,9 @@
 # Quick Start
 
-`@ratinchat/parrot.js` depends on the following packages. Be sure to install these along with this package!
-
-- [`discord.js`](https://www.npmjs.com/package/discord.js)
-
 You can use the following command to install this package, or replace `npm install` with your package manager of choice.
 
 ```
-npm install @ratinchat/parrot.js discord.js@14.x
+npm install @ratinchat/parrot.js
 ```
 
 ---
@@ -192,7 +188,7 @@ There are a few new changes to parrot.js that have been made.
 Here is a list of all the current options:
 
 ```js
-  User,
+User,
   Mentionable,
   Channel,
   Role,

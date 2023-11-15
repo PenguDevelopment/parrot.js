@@ -12,11 +12,11 @@ To create a context menu, use the following code:
 
 ```js
 interactionCommands.newContextMenu({
-    name: 'test',
-    type: parrot.ContextMenuType.User,
-    execute: async (interaction) => {
-        await interaction.reply({ content: 'Test', components: [] });
-    }
+  name: "test",
+  type: parrot.ContextMenuType.User,
+  execute: async (interaction) => {
+    await interaction.reply({ content: "Test", components: [] });
+  },
 });
 ```
 
@@ -27,9 +27,9 @@ interactionCommands.newContextMenu({
 There are 3 types of context menus:
 
 ```js
-parrot.ContextMenuType.ChatInput
-parrot.ContextMenuType.User
-parrot.ContextMenuType.Message
+parrot.ContextMenuType.ChatInput;
+parrot.ContextMenuType.User;
+parrot.ContextMenuType.Message;
 ```
 
 ---
@@ -49,15 +49,15 @@ await parrot.ImportSlashCommands(bot, "./SlashCmds");
 You can make external context menus like this:
 
 ```js
-import parrot from '../../../GitHub/parrot.js/src/index.js'
+import parrot from "../../../GitHub/parrot.js/src/index.js";
 
 const command = new parrot.ContextMenuCommand({
-    name: 'wspgang',
-    type: parrot.ContextMenuType.User,
-    execute: async (interaction) => {
-        await interaction.reply({ content: 'Wsp', components: [] });
-    }
-})
+  name: "wspgang",
+  type: parrot.ContextMenuType.User,
+  execute: async (interaction) => {
+    await interaction.reply({ content: "Wsp", components: [] });
+  },
+});
 
 export { command };
 ```

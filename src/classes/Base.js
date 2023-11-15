@@ -1,8 +1,15 @@
 import { Client } from "discord.js";
-import { joinVoiceChannel, getVoiceConnection, createAudioPlayer, createAudioResource, NoSubscriberBehavior, AudioPlayerStatus } from "@discordjs/voice";
+import {
+  joinVoiceChannel,
+  getVoiceConnection,
+  createAudioPlayer,
+  createAudioResource,
+  NoSubscriberBehavior,
+  AudioPlayerStatus,
+} from "@discordjs/voice";
 import { convertor } from "../functions/convertor.js";
 import { checkUpdate, startUpLog } from "../functions/boxes.js";
-import { search, stream } from 'play-dl';
+import { search, stream } from "play-dl";
 
 const [major] = process.version.replace("v", "").split(".");
 if (isNaN(Number(major)) || Number(major) < 16) {
@@ -16,7 +23,8 @@ class BaseClient extends Client {
     this.token = options.token;
     this.removeBotStartupLog = options.removeBotStartupLog;
     this.removeMessageArgsCheckMessage = options.removeMessageArgsCheckMessage;
-    this.removeInteractionArgsCheckMessage = options.removeInteractionArgsCheckMessage;
+    this.removeInteractionArgsCheckMessage =
+      options.removeInteractionArgsCheckMessage;
     if (!this.token) {
       throw new Error(`You need a bot token to start your bot.`);
     } else {
@@ -36,20 +44,22 @@ class BaseClient extends Client {
     };
     message.createCollector = async (type, filter, options) => {
       if (type === "button") {
-        const collector =
-          await message.channel.createMessageComponentCollector({
+        const collector = await message.channel.createMessageComponentCollector(
+          {
             componentType: 2,
             filter,
             ...options,
-          });
+          },
+        );
         return collector;
       } else if (type === "selectMenu") {
-        const collector =
-          await message.channel.createMessageComponentCollector({
+        const collector = await message.channel.createMessageComponentCollector(
+          {
             componentType: 3,
             filter,
             ...options,
-          });
+          },
+        );
         return collector;
       } else {
         throw new Error(
@@ -175,67 +185,67 @@ class BaseClient extends Client {
   }
 
   async onInteractionCreate(interaction) {
-     interaction.replyEphemeral = async (...args) => {
-            await interaction.reply(...args);
-          };
-      interaction.ButtonCollector = async ({ ...args }) => {
-        if (args.componentType) {
-          const collector =
-            await interaction.channel.createMessageComponentCollector({
-              ...args,
-            });
-          return collector;
-        } else {
-          const collector =
-            await interaction.channel.createMessageComponentCollector({
-              componentType: 2,
-              ...args,
-            });
-          return collector;
-        }
-      };
-      interaction.createCollector = async (type, filter, options) => {
-        if (type === "button") {
-          const collector =
-            await interaction.channel.createMessageComponentCollector({
-              componentType: 2,
-              filter,
-              ...options,
-            });
-          return collector;
-        } else if (type === "selectMenu") {
-          const collector =
-            await interaction.channel.createMessageComponentCollector({
-              componentType: 3,
-              filter,
-              ...options,
-            });
-          return collector;
-        } else {
-          throw new Error(
-            `Invalid collector type. Valid types are 'button' and 'selectMenu'.`,
-          );
-        }
-      };
-      
-      interaction.collectModalInput = async ({ ...args }) => {
-        const collector = await interaction
-          .awaitModalSubmit({ ...args })
-          .catch((error) => {
-            console.log(error);
+    interaction.replyEphemeral = async (...args) => {
+      await interaction.reply(...args);
+    };
+    interaction.ButtonCollector = async ({ ...args }) => {
+      if (args.componentType) {
+        const collector =
+          await interaction.channel.createMessageComponentCollector({
+            ...args,
           });
-        collector.fields = collector.fields.fields;
         return collector;
-      };
+      } else {
+        const collector =
+          await interaction.channel.createMessageComponentCollector({
+            componentType: 2,
+            ...args,
+          });
+        return collector;
+      }
+    };
+    interaction.createCollector = async (type, filter, options) => {
+      if (type === "button") {
+        const collector =
+          await interaction.channel.createMessageComponentCollector({
+            componentType: 2,
+            filter,
+            ...options,
+          });
+        return collector;
+      } else if (type === "selectMenu") {
+        const collector =
+          await interaction.channel.createMessageComponentCollector({
+            componentType: 3,
+            filter,
+            ...options,
+          });
+        return collector;
+      } else {
+        throw new Error(
+          `Invalid collector type. Valid types are 'button' and 'selectMenu'.`,
+        );
+      }
+    };
 
-      interaction.display = async (modal) => {
-        await interaction.showModal(modal);
-      };
+    interaction.collectModalInput = async ({ ...args }) => {
+      const collector = await interaction
+        .awaitModalSubmit({ ...args })
+        .catch((error) => {
+          console.log(error);
+        });
+      collector.fields = collector.fields.fields;
+      return collector;
+    };
 
-      interaction.getSubcommand = async (name) => {
-        const subcommand = await interaction.options.getSubcommand(name);
-        return subcommand;
-      };
+    interaction.display = async (modal) => {
+      await interaction.showModal(modal);
+    };
+
+    interaction.getSubcommand = async (name) => {
+      const subcommand = await interaction.options.getSubcommand(name);
+      return subcommand;
+    };
 
     interaction.ConnectChannel = async (channelId) => {
       if (channelId) {
@@ -252,7 +262,9 @@ class BaseClient extends Client {
 
         return connection;
       }
-      const guild = await interaction.client.guilds.cache.get(interaction.guild.id);
+      const guild = await interaction.client.guilds.cache.get(
+        interaction.guild.id,
+      );
       const member = await guild.members.cache.get(interaction.member.user.id);
       const voiceChannel = await member.voice.channel;
 
@@ -294,7 +306,7 @@ class BaseClient extends Client {
     interaction.parseYoutubeResults = async (results) => {
       const videoTitles = [];
       if (results) {
-        await results.forEach(item => {
+        await results.forEach((item) => {
           const videoTitle = item.title;
           const videoId = item.id;
           videoTitles.push({ name: videoTitle, value: videoId });
@@ -305,23 +317,23 @@ class BaseClient extends Client {
 
     interaction.sendAutocompleteResults = async (results) => {
       await interaction.respond(
-        await results.map(choice => ({
+        await results.map((choice) => ({
           name: choice.name ? choice.name : choice.value,
           value: choice.value ? choice.value : choice.name,
-        }))
+        })),
       );
     };
 
     interaction.playYoutubeSong = async (videoId, connection) => {
-      const videoInfo = await search(videoId, { limit: 1 })
+      const videoInfo = await search(videoId, { limit: 1 });
       const audio = await stream(videoId);
       const resource = createAudioResource(audio.stream, {
-        inputType: audio.type
-    });
+        inputType: audio.type,
+      });
       const player = createAudioPlayer({
         noSubscriber: NoSubscriberBehavior.Pause,
       });
-   
+
       player.play(resource);
       connection.subscribe(player);
       return videoInfo[0];
@@ -344,8 +356,10 @@ class BaseClient extends Client {
     if (interaction.isAutocomplete()) {
       const command = interaction.client.commands.get(interaction.commandName);
       if (!command) {
-          console.error(`No command matching ${interaction.commandName} was found.`);
-          return;
+        console.error(
+          `No command matching ${interaction.commandName} was found.`,
+        );
+        return;
       }
       try {
         return await command.autocomplete(interaction);

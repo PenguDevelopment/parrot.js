@@ -5,7 +5,9 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "website": "docsify serve docs"
+    "website": "docsify serve docs",
+    "lint": "eslint src",
+    "pretty": "prettier --write ."
   },
   "repository": {
     "type": "git",
