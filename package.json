@@ -1,11 +1,11 @@
 {
   "name": "@ratinchat/parrot.js",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "description": "The simple framework for advanced bots",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "test": "none"
+    "website": "docsify serve docs"
   },
   "repository": {
     "type": "git",
@@ -32,7 +32,13 @@
     "README.md"
   ],
   "dependencies": {
-    "discord.js": "^14.13.0"
+    "@discordjs/voice": "^0.16.0",
+    "boxen": "^7.1.1",
+    "discord.js": "^14.11.0",
+    "libsodium-wrappers": "^0.7.13",
+    "package-json": "^8.1.1",
+    "play-dl": "^1.9.7",
+    "semver-diff": "^4.0.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.22.9",

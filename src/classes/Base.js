@@ -1,5 +1,9 @@
 import { Client } from "discord.js";
+import { joinVoiceChannel, getVoiceConnection, createAudioPlayer, createAudioResource, NoSubscriberBehavior, AudioPlayerStatus } from "@discordjs/voice";
 import { convertor } from "../functions/convertor.js";
+import { checkUpdate, startUpLog } from "../functions/boxes.js";
+import { search, stream } from 'play-dl';
+
 const [major] = process.version.replace("v", "").split(".");
 if (isNaN(Number(major)) || Number(major) < 16) {
   throw new Error("node.js version must be v16.9.0 or above.");
@@ -10,23 +14,16 @@ class BaseClient extends Client {
     super(options);
     this.intents = options.intents;
     this.token = options.token;
-    if (options.removeBotStartupLog) {
-      this.removeBotStartupLog = options.removeBotStartupLog;
-    }
-    if (options.removeMessageArgsCheckMessage) {
-      this.removeMessageArgsCheckMessage =
-        options.removeMessageArgsCheckMessage;
-    }
-    if (options.removeInteractionArgsCheckMessage) {
-      this.removeInteractionArgsCheckMessage =
-        options.removeInteractionArgsCheckMessage;
-    }
+    this.removeBotStartupLog = options.removeBotStartupLog;
+    this.removeMessageArgsCheckMessage = options.removeMessageArgsCheckMessage;
+    this.removeInteractionArgsCheckMessage = options.removeInteractionArgsCheckMessage;
     if (!this.token) {
       throw new Error(`You need a bot token to start your bot.`);
     } else {
-      if (!this.removeBotStartupLog) {
-        console.log(`Your bot is now online!`);
+      if (this.removeBotStartupLog !== true) {
+        startUpLog();
       }
+      checkUpdate();
       this.on("messageCreate", this.onMessage.bind(this));
       this.on("interactionCreate", this.onInteractionCreate.bind(this));
       this.login(this.token);
@@ -36,44 +33,6 @@ class BaseClient extends Client {
   async onMessage(message) {
     message.send = async (content) => {
       await message.channel.send(content);
-    };
-    message.ButtonCollector = async ({ ...args }) => {
-      console.warn(
-        "This function is deprecated. Please use message.createCollector('button') instead. More info in docs.",
-      );
-      if (args.componentType) {
-        const collector =
-          await message.channel.createMessageComponentCollector({
-            ...args,
-          });
-        return collector;
-      } else {
-        const collector =
-          await message.channel.createMessageComponentCollector({
-            componentType: 2,
-            ...args,
-          });
-        return collector;
-      }
-    };
-    message.SelectMenuCollector = async ({ ...args }) => {
-      console.warn(
-        "This function is deprecated. Please use message.createCollector('selectMenu') instead. More info in docs.",
-      );
-      if (args.componentType) {
-        const collector =
-          await message.channel.createMessageComponentCollector({
-            ...args,
-          });
-        return collector;
-      } else {
-        const collector =
-          await message.channel.createMessageComponentCollector({
-            componentType: 3,
-            ...args,
-          });
-        return collector;
-      }
     };
     message.createCollector = async (type, filter, options) => {
       if (type === "button") {
@@ -219,83 +178,155 @@ class BaseClient extends Client {
      interaction.replyEphemeral = async (...args) => {
             await interaction.reply(...args);
           };
-          interaction.ButtonCollector = async ({ ...args }) => {
-            if (args.componentType) {
-              const collector =
-                await interaction.channel.createMessageComponentCollector({
-                  ...args,
-                });
-              return collector;
-            } else {
-              const collector =
-                await interaction.channel.createMessageComponentCollector({
-                  componentType: 2,
-                  ...args,
-                });
-              return collector;
-            }
-          };
-          interaction.SelectMenuCollector = async ({ ...args }) => {
-            console.warn(
-              "This function is deprecated. Please use interaction.createCollector('selectMenu') instead. More info in docs.",
-            );
-            if (args.componentType) {
-              const collector =
-                await interaction.channel.createMessageComponentCollector({
-                  ...args,
-                });
-              return collector;
-            } else {
-              const collector =
-                await interaction.channel.createMessageComponentCollector({
-                  componentType: 3,
-                  ...args,
-                });
-              return collector;
-            }
-          };
-          interaction.createCollector = async (type, filter, options) => {
-            if (type === "button") {
-              const collector =
-                await interaction.channel.createMessageComponentCollector({
-                  componentType: 2,
-                  filter,
-                  ...options,
-                });
-              return collector;
-            } else if (type === "selectMenu") {
-              const collector =
-                await interaction.channel.createMessageComponentCollector({
-                  componentType: 3,
-                  filter,
-                  ...options,
-                });
-              return collector;
-            } else {
-              throw new Error(
-                `Invalid collector type. Valid types are 'button' and 'selectMenu'.`,
-              );
-            }
-          };
+      interaction.ButtonCollector = async ({ ...args }) => {
+        if (args.componentType) {
+          const collector =
+            await interaction.channel.createMessageComponentCollector({
+              ...args,
+            });
+          return collector;
+        } else {
+          const collector =
+            await interaction.channel.createMessageComponentCollector({
+              componentType: 2,
+              ...args,
+            });
+          return collector;
+        }
+      };
+      interaction.createCollector = async (type, filter, options) => {
+        if (type === "button") {
+          const collector =
+            await interaction.channel.createMessageComponentCollector({
+              componentType: 2,
+              filter,
+              ...options,
+            });
+          return collector;
+        } else if (type === "selectMenu") {
+          const collector =
+            await interaction.channel.createMessageComponentCollector({
+              componentType: 3,
+              filter,
+              ...options,
+            });
+          return collector;
+        } else {
+          throw new Error(
+            `Invalid collector type. Valid types are 'button' and 'selectMenu'.`,
+          );
+        }
+      };
+      
+      interaction.collectModalInput = async ({ ...args }) => {
+        const collector = await interaction
+          .awaitModalSubmit({ ...args })
+          .catch((error) => {
+            console.log(error);
+          });
+        collector.fields = collector.fields.fields;
+        return collector;
+      };
 
-          interaction.collectModalInput = async ({ ...args }) => {
-            const collector = await interaction
-              .awaitModalSubmit({ ...args })
-              .catch((error) => {
-                console.log(error);
-              });
-            collector.fields = collector.fields.fields;
-            return collector;
-          };
+      interaction.display = async (modal) => {
+        await interaction.showModal(modal);
+      };
 
-          interaction.display = async (modal) => {
-            await interaction.showModal(modal);
-          };
+      interaction.getSubcommand = async (name) => {
+        const subcommand = await interaction.options.getSubcommand(name);
+        return subcommand;
+      };
 
-          interaction.getSubcommand = async (name) => {
-            const subcommand = await interaction.options.getSubcommand(name);
-            return subcommand;
-          };
+    interaction.ConnectChannel = async (channelId) => {
+      if (channelId) {
+        const channel = await interaction.client.channels.cache.get(channelId);
+        if (!channel) {
+          return false;
+        }
+
+        const connection = joinVoiceChannel({
+          channelId: channel.id,
+          guildId: channel.guild.id,
+          adapterCreator: channel.guild.voiceAdapterCreator,
+        });
+
+        return connection;
+      }
+      const guild = await interaction.client.guilds.cache.get(interaction.guild.id);
+      const member = await guild.members.cache.get(interaction.member.user.id);
+      const voiceChannel = await member.voice.channel;
+
+      if (!voiceChannel) {
+        return false;
+      }
+
+      const connection = joinVoiceChannel({
+        channelId: voiceChannel.id,
+        guildId: voiceChannel.guild.id,
+        adapterCreator: voiceChannel.guild.voiceAdapterCreator,
+      });
+
+      return connection;
+    };
+
+    interaction.GetConnection = async () => {
+      const connection = getVoiceConnection(interaction.guild.id);
+      return connection;
+    };
+
+    interaction.GetPlayer = async (connection) => {
+      return connection.state.subscription.player;
+    };
+
+    interaction.checkPaused = async (player) => {
+      if (player.state.status === AudioPlayerStatus.Paused) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    interaction.fetchYoutubeQuery = async (query, numResults = 10) => {
+      const result = await search(query, { limit: numResults });
+      return result;
+    };
+
+    interaction.parseYoutubeResults = async (results) => {
+      const videoTitles = [];
+      if (results) {
+        await results.forEach(item => {
+          const videoTitle = item.title;
+          const videoId = item.id;
+          videoTitles.push({ name: videoTitle, value: videoId });
+        });
+      }
+      return videoTitles;
+    };
+
+    interaction.sendAutocompleteResults = async (results) => {
+      await interaction.respond(
+        await results.map(choice => ({
+          name: choice.name ? choice.name : choice.value,
+          value: choice.value ? choice.value : choice.name,
+        }))
+      );
+    };
+
+    interaction.playYoutubeSong = async (videoId, connection) => {
+      const videoInfo = await search(videoId, { limit: 1 })
+      const audio = await stream(videoId);
+      const resource = createAudioResource(audio.stream, {
+        inputType: audio.type
+    });
+      const player = createAudioPlayer({
+        noSubscriber: NoSubscriberBehavior.Pause,
+      });
+   
+      player.play(resource);
+      connection.subscribe(player);
+      return videoInfo[0];
+    };
+
     if (interaction.isContextMenuCommand()) {
       const { commandName } = interaction;
 
@@ -309,6 +340,21 @@ class BaseClient extends Client {
         }
       }
     }
+
+    if (interaction.isAutocomplete()) {
+      const command = interaction.client.commands.get(interaction.commandName);
+      if (!command) {
+          console.error(`No command matching ${interaction.commandName} was found.`);
+          return;
+      }
+      try {
+        return await command.autocomplete(interaction);
+      } catch (error) {
+        console.error(error);
+        return;
+      }
+    }
+
     for (const slash of this.slashCommands) {
       if (slash.name === interaction.commandName) {
         if (slash.permissions) {

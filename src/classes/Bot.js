@@ -1,12 +1,14 @@
 import { BaseClient } from "./Base.js";
-import { REST, Routes } from "discord.js";
+import { Collection, REST, Routes } from "discord.js";
+import { logSlashCommandStatus } from "../functions/boxes.js";
 
 class Bot extends BaseClient {
   constructor(options) {
     super(options);
-    this.commands = [];
+    this.textCommands = [];
     this.slashCommands = [];
     this.contextMenus = [];
+    this.commands = new Collection();
   }
 
   setStatus(options) {
@@ -61,7 +63,7 @@ class Bot extends BaseClient {
     this.prefix = options.prefix;
     return {
       newCommand: (command) => {
-        this.commands.push(command);
+        this.textCommands.push(command);
       },
     };
   }
@@ -74,6 +76,7 @@ class Bot extends BaseClient {
     return {
       newCommand: (command) => {
         this.slashCommands.push(command);
+        this.commands.set(command.name, command);
       },
       newContextMenu: (contextMenu) => {
         this.contextMenus.push(contextMenu);
@@ -88,7 +91,7 @@ class Bot extends BaseClient {
         }
         await bot.onReady(async () => {
           const rest = new REST({ version: "10" }).setToken(token);
-          const commands = [];
+          const contextCommands = [];
           for (const command of combinedCommands) {
             const options = [];
             if (command.args) {
@@ -100,6 +103,7 @@ class Bot extends BaseClient {
                   description_localizations: arg.description_localizations,
                   required: arg.required,
                   type: arg.type,
+                  autocomplete: arg.autocomplete,
                 };
                 options.push(option);
               }
@@ -115,6 +119,7 @@ class Bot extends BaseClient {
                       description_localizations: arg.description_localizations,
                       required: arg.required,
                       type: arg.type,
+                      autocomplete: arg.autocomplete,
                     };
                     subcommandOptions.push(option);
                   }
@@ -175,7 +180,7 @@ class Bot extends BaseClient {
                 options.push(option);
               }
               data = {
-                options: options,
+                options,
                 name: command.name,
                 type: command.type,
                 name_localizations: command.name_localizations,
@@ -187,7 +192,7 @@ class Bot extends BaseClient {
               };
             } else {
               data = {
-                options: options,
+                options,
                 name: command.name,
                 type: command.type,
                 name_localizations: command.name_localizations,
@@ -198,19 +203,15 @@ class Bot extends BaseClient {
                 dm_permission: command.dm_permission,
               };
             }
-            commands.push(data);
+            contextCommands.push(data);
+            // this.commands.set(command.name, command);
           }
           try {
-            console.log(
-              `Started refreshing ${commands.length} application (/) commands.`,
-            );
             const data = await rest.put(
               Routes.applicationCommands(bot.application.id),
-              { body: commands },
+              { body: contextCommands },
             );
-            console.log(
-              `Successfully reloaded ${data.length} application (/) commands.`,
-            );
+            logSlashCommandStatus(data);
           } catch (error) {
             console.error(error);
           }

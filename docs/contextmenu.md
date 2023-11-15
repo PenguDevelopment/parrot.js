@@ -1,7 +1,5 @@
 # Context Menus
 
-### In Development
-
 Due to how context menus work, to initialize them you have to initialize slash commands.
 
 To initialize slash commands, use the following code:

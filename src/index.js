@@ -2,7 +2,6 @@ import { Bot } from "./classes/Bot.js";
 import { ImportCommands } from "./functions/importCommands.js";
 import { TextCommand } from "./classes/textCommand.js";
 import { SlashCommand } from "./classes/slashCommand.js";
-import checkUpdate from "./functions/checkUpdate.js";
 import {
   EmbedBuilder,
   ActionRowBuilder,
@@ -15,8 +14,6 @@ import { ImportEvents } from "./functions/importEvents.js";
 import { Event } from "./classes/event.js";
 import { Modal } from "./classes/Modal.js";
 import { ContextMenuCommand } from "./classes/ContextMenus.js";
-
-checkUpdate();
 
 const parrot = {
   Bot,

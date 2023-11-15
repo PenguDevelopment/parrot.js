@@ -1,10 +1,10 @@
-# Parrot.js <small>0.5.3</small>
+# Parrot.js <small>0.6.0</small>
 
 > A simple and lightweight discord bot framework
 
 - Simpler than Discord.js
-- Small size so wont add much to your already large Discord.js bundle
 - Easy to use
+- Tons of features
 
 [GitHub](https://github.com/PenguDevelopment/parrot.js)
 [Getting Started](#parrotjs)

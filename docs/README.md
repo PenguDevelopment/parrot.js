@@ -21,4 +21,4 @@ If you want, you can donate to support my work. [Buy me a cup of coffee](https:/
 
 ## Community
 
-If you want to contact us for any bugs you find or for support, feel free to join our [Discord server](https://discord.gg/uN4dWMj84x).
+If you want to contact us for any bugs you find or for support, feel free to join our [Discord server](https://discord.gg/CFzZRDJZFK).

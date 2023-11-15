@@ -10,5 +10,6 @@ export async function ImportSlashCommands(bot, relativePath) {
     const moduleUrl = new URL(`file://${join(absolutePath, file)}`);
     const command = await import(moduleUrl.href).then((m) => m.command);
     bot.slashCommands.push(command);
+    bot.commands.set(command.name, command);
   }
 }

@@ -9,6 +9,6 @@ export async function ImportCommands(bot, relativePath) {
   )) {
     const moduleUrl = new URL(`file://${join(absolutePath, file)}`);
     const command = await import(moduleUrl.href).then((m) => m.command);
-    bot.commands.push(command);
+    bot.textCommands.push(command);
   }
 }

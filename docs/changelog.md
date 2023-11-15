@@ -1,5 +1,18 @@
 # Changelog
 
+## Version 0.6.0
+
+Added:
+
+- Added basic music support
+- Changed log messages to be better looking
+- Created a new discord server
+- Added autocomplete support
+
+Removed:
+
+- Completely removed the deprecated collectors
+
 ## Version 0.5.3
 
 Added:
