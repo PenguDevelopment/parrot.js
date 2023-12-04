@@ -34,7 +34,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@discordjs/voice": "^0.16.0",
+    "@discordjs/voice": "^0.16.1",
     "boxen": "^7.1.1",
     "discord.js": "^14.11.0",
     "libsodium-wrappers": "^0.7.13",
