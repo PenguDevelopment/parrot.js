@@ -1,6 +1,6 @@
 {
   "name": "@ratinchat/parrot.js",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "The simple framework for advanced bots",
   "main": "src/index.js",
   "type": "module",
@@ -35,6 +35,7 @@
   ],
   "dependencies": {
     "@discordjs/voice": "^0.16.0",
+    "better-sqlite3": "^9.2.2",
     "boxen": "^7.1.1",
     "discord.js": "^14.11.0",
     "libsodium-wrappers": "^0.7.13",

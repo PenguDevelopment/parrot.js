@@ -9,6 +9,7 @@ import {
 } from "@discordjs/voice";
 import { convertor } from "../functions/convertor.js";
 import { checkUpdate, startUpLog } from "../functions/boxes.js";
+import { handleDatabase } from "../functions/database.js";
 import { search, stream } from "play-dl";
 
 const [major] = process.version.replace("v", "").split(".");
@@ -36,9 +37,13 @@ class BaseClient extends Client {
       this.on("interactionCreate", this.onInteractionCreate.bind(this));
       this.login(this.token);
     }
-  }
+    if (options.database && options.database.path) {
+      this.database = handleDatabase(options.database);
+    }  
+}
 
   async onMessage(message) {
+    message.db = this.database;
     message.send = async (content) => {
       await message.channel.send(content);
     };
@@ -338,6 +343,8 @@ class BaseClient extends Client {
       connection.subscribe(player);
       return videoInfo[0];
     };
+
+    interaction.db = this.database;
 
     if (interaction.isContextMenuCommand()) {
       const { commandName } = interaction;

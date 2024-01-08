@@ -1,59 +1,114 @@
-declare module "@ratinchat/parrot.js" {
-  export interface Bot {
-    setStatus(options: any): void;
-    initEvents(): any;
-    initCommands(options: any): any;
-    getPing(): number;
-    initSlashCommands(): any;
-  }
+// Some basic types for the library
+import {
+  EmbedBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  StringSelectMenuBuilder,
+  PermissionsBitField,
+} from "discord.js";
 
-  export interface TextCommand {
-    method1(): void;
-    method2(): void;
-    property1: string;
-  }
+declare const Options: {
+  User: number;
+  Mentionable: number;
+  Channel: number;
+  Role: number;
+  String: number;
+  Integer: number;
+  Boolean: number;
+  Number: number;
+  Attachment: number;
+  SubCommand: number;
+  SubCommandGroup: number;
+  Emoji: number;
+};
 
-  export interface SlashCommand {
-    method1(): void;
-    method2(): void;
-    property1: string;
-  }
+declare const ButtonStyle: {
+  Primary: number;
+  Secondary: number;
+  Success: number;
+  Danger: number;
+  Link: number;
+};
 
-  export interface Event {
-    method1(): void;
-    method2(): void;
-    property1: string;
-  }
+declare const ModalStyle: {
+  Short: number;
+  Long: number;
+};
 
-  export interface Modal {
-    method1(): void;
-    method2(): void;
-    property1: string;
-  }
+declare const ContextMenuType: {
+  ChatInput: number;
+  User: number;
+  Message: number;
+};
 
-  export type ImportCommands = (commands: any[]) => void;
-  export type ImportSlashCommands = (commands: any[]) => void;
-  export type ImportEvents = (events: any[]) => void;
-  export type CheckUpdate = () => void;
+declare const ImportSlashCommands: any; // Replace with the correct type if available
+declare const ImportEvents: any; // Replace with the correct type if available
 
-  // export interface Parrot {
-  //   Bot: Bot;
-  //   Options: ParrotOptions;
-  // }
-
-  // enum ParrotOptions {
-  //   User = 6,
-  //   Mentionable = 9,
-  //   Channel = 7,
-  //   Role = 8,
-  //   String = 3,
-  //   Integer = 4,
-  //   Boolean = 5,
-  //   Number = 10,
-  //   Attachment = 11,
-  //   SubCommand = 1,
-  //   SubCommandGroup = 2,
-  //   Emoji = 12,
-  // }
-  // Improved typescript coming soon ;)
+declare class Event {
+  constructor(options: { name: string; execute: Function });
 }
+
+declare class TextCommand {
+  constructor(options: { name: string; description: string; args: string[]; execute: Function });
+}
+
+declare class SlashCommand {
+  constructor(options: {
+    name: string;
+    permission: any; // Replace with the correct type later
+    name_localizations: string[];
+    description: string;
+    description_localizations: string[];
+    args: string[];
+    execute: Function;
+    autocomplete: boolean;
+    subcommands: any[]; // Replace with the correct type later
+    subcommandGroups: any[]; // Replace with the correct type later
+    type: number;
+  });
+}
+
+declare class Modal {
+  constructor();
+  async addFields(fields: {
+    id?: string;
+    title?: string;
+    placeholder?: string;
+    minLength?: number;
+    maxLength?: number;
+    required?: boolean;
+    style?: number;
+  }[]): Promise<void>;
+}
+
+declare class ContextMenuCommand {
+  constructor(options: {
+    name: string;
+    permission: any; // Replace with the correct type later
+    name_localizations: string[];
+    description: string;
+    description_localizations: string[];
+    execute: Function;
+    args: string[];
+    type: number;
+  });
+}
+
+export {
+  TextCommand,
+  SlashCommand,
+  EmbedBuilder as Embed,
+  ActionRowBuilder as ActionRow,
+  ButtonBuilder as Button,
+  StringSelectMenuBuilder as SelectMenu,
+  PermissionsBitField as Permissions,
+  ImportSlashCommands,
+  ImportEvents,
+  Event,
+  Modal,
+  ContextMenuCommand,
+  Options,
+  ButtonStyle,
+  ModalStyle,
+  ContextMenuType,
+};
