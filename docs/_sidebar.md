@@ -17,8 +17,10 @@
     - [Client Options](client.md)
     - [Context Menu](contextmenu.md)
     - [AutoComplete](autocomplete.md)
+    - [Database](database.md)
   - Advanced Guides
     - [Create a Music Bot](music.md)
+    - [Database Currency Command](currency.md)
 
 - [Changelog](changelog.md)
 - [Known Issues](knownissues.md)

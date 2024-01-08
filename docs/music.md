@@ -1,6 +1,6 @@
 # Creating A Music Bot
 
-#### Queue and skip will come in v0.7.0 as well as other music sources.
+#### Queue and skip will come in v0.8.0 as well as other music sources.
 
 We will create a fully functional music bot that can play songs from youtube, in parrot.js
 

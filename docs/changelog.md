@@ -1,5 +1,22 @@
 # Changelog
 
+## Version 0.7.0
+
+Added:
+- Added a new database system
+- Added a new currency command example
+
+Fixed:
+- Added a way to import functions using just { function } instead of parrot.function
+- Added some simple typescript declarations for the 50th time. (You guys can test it and if it doesn't work, just create an issue in github)
+
+Future Plans:
+- Finish the music command guide
+- Create a new website for the docs
+- Add an extension system so that you can add your own features to the framework or choose what you want
+- Add a npx command to create a new bot with the framework
+- Add scratch for parrot.js (optional)
+
 ## Version 0.6.0
 
 Added:
