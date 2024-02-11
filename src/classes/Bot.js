@@ -90,7 +90,7 @@ class Bot extends BaseClient {
           combinedCommands.push(command);
         }
         await bot.onReady(async () => {
-          const rest = new REST({ version: "10" }).setToken(token);
+          const rest = new REST().setToken(token);
           const contextCommands = [];
           for (const command of combinedCommands) {
             const options = [];
@@ -104,6 +104,7 @@ class Bot extends BaseClient {
                   required: arg.required,
                   type: arg.type,
                   autocomplete: arg.autocomplete,
+                  choices: arg.choices,
                 };
                 options.push(option);
               }
@@ -120,6 +121,7 @@ class Bot extends BaseClient {
                       required: arg.required,
                       type: arg.type,
                       autocomplete: arg.autocomplete,
+                      choices: arg.choices,
                     };
                     subcommandOptions.push(option);
                   }
@@ -132,6 +134,7 @@ class Bot extends BaseClient {
                     subcommand.description_localizations,
                   type: 1,
                   options: subcommandOptions,
+                  choices: subcommand.choices,
                 };
                 options.push(option);
               }
@@ -153,6 +156,7 @@ class Bot extends BaseClient {
                           arg.description_localizations,
                         required: arg.required,
                         type: arg.type,
+                        choices: arg.choices,
                       };
                       subcommandOptions.push(option);
                     }
@@ -165,6 +169,7 @@ class Bot extends BaseClient {
                       subcommand.description_localizations,
                     type: 1,
                     options: subcommandOptions,
+                    choices: subcommand.choices,
                   };
                   subcommandGroupOptions.push(option);
                 }

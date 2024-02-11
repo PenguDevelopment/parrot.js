@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 0.7.1
+
+Added:
+- Choices to subcommands
+
+This update was just added because subcommands needed choices.
+
 ## Version 0.7.0
 
 Added:
