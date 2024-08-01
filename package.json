@@ -38,7 +38,7 @@
     "better-sqlite3": "^9.2.2",
     "boxen": "^7.1.1",
     "discord.js": "^14.11.0",
-    "libsodium-wrappers": "^0.7.13",
+    "libsodium-wrappers": "^0.7.14",
     "package-json": "^8.1.1",
     "play-dl": "^1.9.7",
     "semver-diff": "^4.0.0"
